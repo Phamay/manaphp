@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Areas\Rbac\Entities\AdminRole;
+use App\Areas\Rbac\Entities\Role;
 use App\Repositories\AdminRepository;
 use ManaPHP\Identifying\IdentityInterface;
 use ManaPHP\Invoking\ArgumentResolvable;
