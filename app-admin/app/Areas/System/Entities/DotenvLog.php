@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Areas\System\Models;
+namespace App\Areas\System\Entities;
 
 use App\Entities\Entity;
 use ManaPHP\Persistence\Attribute\Id;

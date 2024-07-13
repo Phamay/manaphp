@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Areas\System\Controllers;
 
-use App\Areas\System\Models\DotenvLog;
+use App\Areas\System\Entities\DotenvLog;
 use App\Areas\System\Repositories\DotenvLogRepository;
 use App\Controllers\Controller;
 use ManaPHP\Di\Attribute\Autowired;
