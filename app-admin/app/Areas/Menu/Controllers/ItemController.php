@@ -13,6 +13,7 @@ use ManaPHP\Http\ControllersInterface;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMappingInterface;
 use ManaPHP\Persistence\Restrictions;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -87,15 +88,15 @@ class ItemController extends Controller
 
             $rMethod = new ReflectionMethod($controller, $action);
 
-            if (($attribute = $rMethod->getAttributes(ViewGetMapping::class, ReflectionAttribute::IS_INSTANCEOF)[0]
+            if (($attribute = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF)[0]
                     ?? null) === null
             ) {
                 continue;
             }
 
-            /** @var ViewGetMapping $actionViewGetMapping */
-            $actionViewGetMapping = $attribute->newInstance();
-            $path = $actionViewGetMapping->getPath();
+            /** @var ViewMappingInterface $viewMapping */
+            $viewMapping = $attribute->newInstance();
+            $path = $viewMapping->getPath();
             if ($path === null) {
                 $path = Str::hyphen(basename($rMethod->getName(), 'Action'));
             } elseif (is_string($path)) {

@@ -6,7 +6,7 @@ namespace App\Controllers;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Version;
 
 #[Authorize(Authorize::GUEST)]
@@ -31,7 +31,7 @@ class IndexController extends Controller
         return $vars;
     }
 
-    #[ViewGetMapping(vars: 'aboutVars')]
+    #[ViewMapping(vars: 'aboutVars')]
     public function aboutAction()
     {
 
