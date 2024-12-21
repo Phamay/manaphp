@@ -12,7 +12,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 
 #[Authorize(Authorize::GUEST)]
 #[RequestMapping('/user/account')]
@@ -27,7 +27,7 @@ class AccountController extends Controller
         return $this->captcha->generate();
     }
 
-    #[ViewGetMapping, PostMapping]
+    #[ViewMapping, PostMapping]
     public function registerAction(string $code, string $password)
     {
         $this->captcha->verify($code);

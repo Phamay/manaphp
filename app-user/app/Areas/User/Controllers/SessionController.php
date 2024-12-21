@@ -16,7 +16,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use function substr;
 
 #[Authorize(Authorize::GUEST)]
@@ -45,7 +45,7 @@ class SessionController extends Controller
         return $vars;
     }
 
-    #[ViewGetMapping('/login', vars: 'loginVars'), PostMapping('/login')]
+    #[ViewMapping('/login', vars: 'loginVars'), PostMapping('/login')]
     public function loginAction(string $code, string $user_name, string $password)
     {
         if (!$udid = $this->cookies->get('CLIENT_UDID')) {

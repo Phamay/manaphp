@@ -13,7 +13,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mailing\MailerInterface;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 
 #[Authorize(Authorize::GUEST)]
 #[RequestMapping('/admin/password')]
@@ -41,7 +41,7 @@ class PasswordController extends Controller
         return $vars;
     }
 
-    #[ViewGetMapping(vars: 'forgetVars'), PostMapping]
+    #[ViewMapping(vars: 'forgetVars'), PostMapping]
     public function forgetAction(string $admin_name, string $email)
     {
         $admin = $this->adminRepository->first(['admin_name' => $admin_name]);
@@ -77,7 +77,7 @@ class PasswordController extends Controller
         ];
     }
 
-    #[ViewGetMapping(vars: 'resetVars'), PostMapping]
+    #[ViewMapping(vars: 'resetVars'), PostMapping]
     public function resetAction(string $token, string $password)
     {
         try {
@@ -96,7 +96,7 @@ class PasswordController extends Controller
     }
 
     #[Authorize(Authorize::USER)]
-    #[ViewGetMapping, PostMapping]
+    #[ViewMapping, PostMapping]
     public function changeAction(string $old_password, string $new_password, string $new_password_confirm)
     {
         $admin = $this->adminRepository->get($this->identity->getId());
