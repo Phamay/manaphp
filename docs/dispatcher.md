@@ -74,7 +74,7 @@ An instantiated controller automatically acts as a listener for dispatch events,
     <?php
 
     use ManaPHP\Eventing\Event;
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
     use ManaPHP\Dispatcher;
 
     class PostsController extends Controller
@@ -97,7 +97,7 @@ This is very useful to check if the user can access to certain action, redirect 
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -212,7 +212,7 @@ If the desired schema is: http://example.com/controller/key1:value1/key2:value, 
 When a route provides named parameters you can receive them in a controller。
 
 ```php
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {

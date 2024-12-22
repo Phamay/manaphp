@@ -31,7 +31,7 @@ and store items and retrieve them in the following way:
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class UserController extends Controller
     {
@@ -58,7 +58,7 @@ It's also possible remove specific variables or destroy the whole session:
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class UserController extends Controller
     {
@@ -98,7 +98,7 @@ Thanks to this you can persist data between requests in every class in an indepe
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class UserController extends Controller
     {
@@ -122,7 +122,7 @@ In a component:
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class Security extends Component
     {

@@ -60,7 +60,7 @@ You can replace or add more a template engine from the controller as follows:
 
     namespace Application\Home\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {

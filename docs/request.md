@@ -27,7 +27,7 @@
 访问`request`组件最常见位置是控制器的动作。
 
 ```php
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -55,7 +55,7 @@
 另一个常见任务是文件上传。 `ManaPHP\Http\Request`提供了一种面向对象的方式来实现这个任务：
 
 ```php
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {

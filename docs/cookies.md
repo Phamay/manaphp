@@ -16,7 +16,7 @@ accessed:
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class SessionController extends Controller
     {
@@ -57,7 +57,7 @@ You can use cookies in the following way:
 
     use ManaPHP\Http\Cookies;
 
-    class IndexController extends ManaPHP\Mvc\Controller{
+    class IndexController extends ManaPHP\Http\Controller{
         public function indexAction(){
             // use plain cookie
             $this->cookies->get('login_time');

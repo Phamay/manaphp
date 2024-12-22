@@ -28,7 +28,7 @@ This way, you can use it in controllers or views by injecting the service in the
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostsController extends Controller
     {
@@ -102,7 +102,7 @@ if you make a "forward" is not necessary to store the messages in session, but i
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class ContactController extends Controller
     {
@@ -133,7 +133,7 @@ Or using a HTTP redirection:
 ```php
     <?php
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class ContactController extends Controller
     {

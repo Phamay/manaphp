@@ -12,6 +12,8 @@ use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
+use ManaPHP\Http\RouterInterface;
+use ManaPHP\Http\SessionInterface;
 use ManaPHP\Mailing\MailerInterface;
 use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
@@ -23,6 +25,8 @@ class PasswordController extends Controller
     #[Autowired] protected CaptchaInterface $captcha;
     #[Autowired] protected MailerInterface $mailer;
     #[Autowired] protected UserRepository $userRepository;
+    #[Autowired] protected RouterInterface $router;
+    #[Autowired] protected SessionInterface $session;
 
     #[Config] protected string $app_name;
 

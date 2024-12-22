@@ -16,6 +16,8 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
+use ManaPHP\Http\RouterInterface;
+use ManaPHP\Http\SessionInterface;
 use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use function substr;
 
@@ -26,6 +28,8 @@ class SessionController extends Controller
     #[Autowired] protected CaptchaInterface $captcha;
     #[Autowired] protected UserRepository $userRepository;
     #[Autowired] protected AdminLoginLogRepository $adminLoginLogRepository;
+    #[Autowired] protected RouterInterface $router;
+    #[Autowired] protected SessionInterface $session;
 
     #[Config] protected string $app_env;
 

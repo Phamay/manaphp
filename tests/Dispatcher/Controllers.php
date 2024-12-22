@@ -3,7 +3,7 @@
 namespace App\Test\Controllers {
 
     use ManaPHP\Exception;
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class Test1Controller extends Controller
     {

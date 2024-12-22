@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Areas\User\Controllers;
 
+use ManaPHP\Http\Controller;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\Controller;
 use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
 
 #[Authorize(Authorize::USER)]

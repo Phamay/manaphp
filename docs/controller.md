@@ -20,7 +20,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -40,7 +40,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -73,7 +73,7 @@
 然后，我们可以通过以下几种方式访问​​该组件：
 
 ```php
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class FileController extends Controller
     {
@@ -95,7 +95,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -125,7 +125,7 @@
 
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {

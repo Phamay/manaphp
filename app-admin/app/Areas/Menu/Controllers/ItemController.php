@@ -8,6 +8,7 @@ use App\Areas\Menu\Repositories\ItemRepository;
 use App\Controllers\Controller;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Str;
+use ManaPHP\Http\AuthorizationInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\ControllersInterface;
 use ManaPHP\Http\Router\Attribute\PostMapping;
@@ -30,6 +31,7 @@ class ItemController extends Controller
 {
     #[Autowired] protected ItemRepository $itemRepository;
     #[Autowired] protected ControllersInterface $controllers;
+    #[Autowired] protected AuthorizationInterface $authorization;
 
     #[ViewGetMapping]
     public function indexAction(int $group_id = 0)
@@ -88,7 +90,9 @@ class ItemController extends Controller
 
             $rMethod = new ReflectionMethod($controller, $action);
 
-            if (($attribute = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF)[0]
+            if (($attribute = $rMethod->getAttributes(
+                    ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF
+                )[0]
                     ?? null) === null
             ) {
                 continue;

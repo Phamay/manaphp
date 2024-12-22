@@ -25,7 +25,7 @@ If you are using the full MVC stack there is no need to create responses manuall
 directly from a controller's action follow this example:
 
 ```php
-    class FeedController extends ManaPHP\Mvc\Controller
+    class FeedController extends ManaPHP\Http\Controller
     {
         public function getAction()
         {

@@ -23,7 +23,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class PostController extends Controller
     {
@@ -98,7 +98,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class ProductController extends Controller
     {
@@ -115,7 +115,7 @@
 ```php
     namespace App\Controllers;
 
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class SessionController extends Controller
     {

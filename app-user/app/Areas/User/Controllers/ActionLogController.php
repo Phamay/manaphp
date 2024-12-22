@@ -6,6 +6,7 @@ namespace App\Areas\User\Controllers;
 use App\Controllers\Controller;
 use App\Repositories\UserActionLogRepository;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Http\AuthorizationInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -17,6 +18,7 @@ use ManaPHP\Persistence\Restrictions;
 class ActionLogController extends Controller
 {
     #[Autowired] protected UserActionLogRepository $userActionLogRepository;
+    #[Autowired] protected AuthorizationInterface $authorization;
 
     #[Authorize(Authorize::USER)]
     #[GetMapping]

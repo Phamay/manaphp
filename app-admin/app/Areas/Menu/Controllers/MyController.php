@@ -6,6 +6,7 @@ namespace App\Areas\Menu\Controllers;
 use App\Areas\Menu\Repositories\GroupRepository;
 use App\Controllers\Controller;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Http\AuthorizationInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -15,6 +16,7 @@ use ManaPHP\Http\Router\Attribute\RequestMapping;
 class MyController extends Controller
 {
     #[Autowired] protected GroupRepository $groupRepository;
+    #[Autowired] protected AuthorizationInterface $authorization;
 
     #[GetMapping]
     public function indexAction()

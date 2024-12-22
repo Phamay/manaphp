@@ -75,7 +75,7 @@
 在控制器内部，可以按如下方式访问这些命名参数：
 
 ```php
-    class PostController extends ManaPHP\Mvc\Controller
+    class PostController extends ManaPHP\Http\Controller
     {
         public function indexAction()
         {
@@ -112,7 +112,7 @@
 ```
 您可以像以前一样访问它们的值：
 ```php
-    use ManaPHP\Mvc\Controller;
+    use ManaPHP\Http\Controller;
 
     class DocumentationController extends Controller
     {

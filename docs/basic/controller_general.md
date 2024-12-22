@@ -12,7 +12,7 @@
 
 ```php
 namespace App\Controllers;
-use ManaPHP\Mvc\Controller;
+use ManaPHP\Http\Controller;
 
 class IndexController extends Controller {
      public function indexAction(){
@@ -34,12 +34,12 @@ namespace App\Controllers;
 > 命名空间定义必须在所有的PHP代码之前，否则会报错
 
 ```php
-use ManaPHP\Mvc\Controller;
+use ManaPHP\Http\Controller;
 ```
 
-表示引入ManaPHP\Mvc\Controller命名空间便于直接使用。所以
+表示引入ManaPHP\Http\Controller命名空间便于直接使用。所以
 ```php
-use ManaPHP\Mvc\Controller;
+use ManaPHP\Http\Controller;
 class IndexController extends Controller
 ```
 等同于使用:
