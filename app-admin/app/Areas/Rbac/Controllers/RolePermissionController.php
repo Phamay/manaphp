@@ -32,7 +32,7 @@ class RolePermissionController extends Controller
     #[Autowired] protected RoleService $roleService;
 
     #[ViewGetMapping]
-    public function indexAction(int $role_id = 0)
+    public function indexAction(int $role_id = 0): array
     {
         if ($role_id > 0) {
             $fields = ['permission_id', 'permission_code', 'display_name', 'created_time'];
@@ -58,7 +58,7 @@ class RolePermissionController extends Controller
     }
 
     #[PostMapping]
-    public function editAction(int $role_id, array $permission_ids = [])
+    public function editAction(int $role_id, array $permission_ids = []): void
     {
         $role = $this->roleRepository->get($role_id);
         $old_permissions = $this->rolePermissionRepository->values('permission_id', ['role_id' => $role->role_id]);
@@ -83,7 +83,7 @@ class RolePermissionController extends Controller
     }
 
     #[GetMapping]
-    public function permissionsAction()
+    public function permissionsAction(): array
     {
         $fields = ['permission_id', 'permission_code', 'display_name'];
         $orders = ['permission_code' => SORT_ASC];
@@ -91,13 +91,13 @@ class RolePermissionController extends Controller
     }
 
     #[GetMapping]
-    public function rolesAction()
+    public function rolesAction(): array
     {
         return $this->roleRepository->all([], ['role_id', 'role_name', 'display_name']);
     }
 
     #[GetMapping]
-    public function grantedAction(int $role_id)
+    public function grantedAction(int $role_id): array
     {
         return $this->rolePermissionRepository->values('permission_id', ['role_id' => $role_id]);
     }

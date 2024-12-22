@@ -4,7 +4,7 @@ namespace App\Widgets;
 
 class CopyrightWidget extends Widget
 {
-    public function run($options = [])
+    public function run($options = []): array
     {
         $vars = [];
 

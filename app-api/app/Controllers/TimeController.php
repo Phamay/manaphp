@@ -10,7 +10,7 @@ use ManaPHP\Http\Router\Attribute\RequestMapping;
 class TimeController extends Controller
 {
     #[GetMapping]
-    public function currentAction()
+    public function currentAction(): array
     {
         $data = [];
         $data['current_time'] = date('Y-m-d H:i:s');

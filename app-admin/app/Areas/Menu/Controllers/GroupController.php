@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Areas\Menu\Controllers;
 
+use App\Areas\Menu\Entities\Group;
 use App\Areas\Menu\Repositories\GroupRepository;
 use App\Controllers\Controller;
 use ManaPHP\Di\Attribute\Autowired;
@@ -20,7 +21,7 @@ class GroupController extends Controller
     #[Autowired] protected GroupRepository $groupRepository;
 
     #[ViewGetMapping]
-    public function indexAction()
+    public function indexAction(): array
     {
         $restrictions = Restrictions::of($this->request->all(), ['group_id']);
         $orders = ['display_order' => SORT_DESC, 'group_id' => SORT_ASC];
@@ -28,25 +29,25 @@ class GroupController extends Controller
     }
 
     #[GetMapping]
-    public function listAction()
+    public function listAction(): array
     {
         return $this->groupRepository->all([], ['group_id', 'group_name']);
     }
 
     #[PostMapping]
-    public function createAction()
+    public function createAction(): Group
     {
         return $this->groupRepository->create($this->request->all());
     }
 
     #[PostMapping]
-    public function editAction()
+    public function editAction(): Group
     {
         return $this->groupRepository->update($this->request->all());
     }
 
     #[PostMapping]
-    public function deleteAction(int $group_id)
+    public function deleteAction(int $group_id): ?Group
     {
         return $this->groupRepository->deleteById($group_id);
     }

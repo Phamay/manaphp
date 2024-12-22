@@ -13,7 +13,7 @@ use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 class MenuController extends Controller
 {
     #[ViewGetMapping]
-    public function indexAction()
+    public function indexAction(): array
     {
         $menu = [
             ['group_name' => '个人中心',

@@ -15,6 +15,7 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[Authorize]
@@ -26,7 +27,7 @@ class AdminRoleController extends Controller
     #[Autowired] protected AdminRoleRepository $adminRoleRepository;
 
     #[ViewGetMapping]
-    public function indexAction(int $role_id = 0, string $keyword = '', int $page = 1, int $size = 10)
+    public function indexAction(int $role_id = 0, string $keyword = '', int $page = 1, int $size = 10): Paginator
     {
         $fields = ['admin_id', 'admin_name', 'created_time',
                    'roles' => ['role_id', 'display_name']
@@ -43,13 +44,13 @@ class AdminRoleController extends Controller
     }
 
     #[GetMapping]
-    public function detailAction(int $admin_id)
+    public function detailAction(int $admin_id): array
     {
         return $this->adminRoleRepository->all(['admin_id' => $admin_id]);
     }
 
     #[PostMapping]
-    public function editAction(int $admin_id, array $role_ids = [])
+    public function editAction(int $admin_id, array $role_ids = []): void
     {
         $admin = $this->adminRepository->get($admin_id);
         $old_roles = $this->adminRoleRepository->values('role_id', ['admin_id' => $admin->admin_id]);
@@ -68,7 +69,7 @@ class AdminRoleController extends Controller
     }
 
     #[GetMapping]
-    public function rolesAction()
+    public function rolesAction(): array
     {
         return $this->roleRepository->all(['role_name!=' => ['guest', 'user']], ['role_id', 'display_name']);
     }

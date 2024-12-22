@@ -17,6 +17,7 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 use function str_contains;
 
@@ -29,7 +30,7 @@ class AdminController extends Controller
     #[Autowired] protected AdminRoleRepository $adminRoleRepository;
 
     #[ViewGetMapping]
-    public function indexAction(string $keyword = '', int $page = 1, int $size = 10)
+    public function indexAction(string $keyword = '', int $page = 1, int $size = 10): Paginator
     {
         $fields = ['admin_id', 'admin_name', 'status', 'white_ip', 'login_ip', 'login_time',
                    'email', 'updator_name', 'creator_name', 'created_time', 'updated_time',
@@ -49,19 +50,19 @@ class AdminController extends Controller
     }
 
     #[GetMapping]
-    public function detailAction(int $admin_id)
+    public function detailAction(int $admin_id): Admin
     {
         return $this->adminRepository->get($admin_id);
     }
 
     #[GetMapping]
-    public function listAction()
+    public function listAction(): array
     {
         return $this->adminRepository->dict([], 'admin_name');
     }
 
     #[PostMapping]
-    public function lockAction(int $admin_id)
+    public function lockAction(int $admin_id): string|Admin
     {
         if ($this->identity->getId() === $admin_id) {
             return '不能锁定自己';
@@ -76,7 +77,7 @@ class AdminController extends Controller
     }
 
     #[PostMapping]
-    public function activeAction(int $admin_id)
+    public function activeAction(int $admin_id): Admin
     {
         $admin = new Admin();
 
@@ -87,7 +88,7 @@ class AdminController extends Controller
     }
 
     #[PostMapping]
-    public function createAction(InputInterface $input, ?int $role_id)
+    public function createAction(InputInterface $input, ?int $role_id): Admin
     {
         $admin = $this->adminRepository->create($input->all());
 
@@ -108,7 +109,7 @@ class AdminController extends Controller
     }
 
     #[PostMapping]
-    public function editAction(int $admin_id, array $role_ids = [], string $password = '')
+    public function editAction(int $admin_id, array $role_ids = [], string $password = ''): Admin
     {
         $admin = new Admin();
 
@@ -144,7 +145,7 @@ class AdminController extends Controller
     }
 
     #[GetMapping]
-    public function rolesAction()
+    public function rolesAction(): array
     {
         return $this->roleRepository->all(['role_name!=' => ['guest', 'user']], ['role_id', 'display_name']
         );

@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Version;
@@ -19,7 +20,7 @@ class IndexController extends Controller
     #[Autowired] protected FlashInterface $flash;
 
     #[GetMapping('/')]
-    public function indexAction()
+    public function indexAction(): ResponseInterface
     {
         return $this->response->redirect('about');
     }

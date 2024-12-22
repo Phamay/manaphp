@@ -17,7 +17,7 @@ class MailController extends Controller
     #[Autowired] protected ViewInterface $view;
 
     #[ViewPostMapping]
-    public function resetPasswordAction()
+    public function resetPasswordAction(): void
     {
         $this->view->setVars(
             [

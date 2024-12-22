@@ -28,7 +28,7 @@ class AccountController extends Controller
     }
 
     #[ViewPostMapping]
-    public function registerAction(string $code, string $password)
+    public function registerAction(string $code, string $password): Admin
     {
         $this->captcha->verify($code);
 

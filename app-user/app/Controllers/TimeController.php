@@ -12,7 +12,7 @@ use ManaPHP\Http\Router\Attribute\RequestMapping;
 class TimeController extends Controller
 {
     #[GetMapping]
-    public function currentAction()
+    public function currentAction(): array
     {
         return ['timestamp' => round(microtime(true), 3), 'human' => date('Y-m-d H:i:s')];
     }

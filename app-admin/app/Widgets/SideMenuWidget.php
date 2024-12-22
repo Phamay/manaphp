@@ -14,7 +14,7 @@ class SideMenuWidget extends Widget
     #[Autowired] protected AuthorizationInterface $authorization;
     #[Autowired] protected GroupRepository $groupRepository;
 
-    public function run($vars = [])
+    public function run($vars = []): array
     {
         $fields = ['group_id', 'group_name', 'icon',
                    'items' => AdditionalRelationCriteria::of(

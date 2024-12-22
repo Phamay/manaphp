@@ -10,7 +10,7 @@ use ManaPHP\Http\Router\Attribute\RequestMapping;
 class TestController extends Controller
 {
     #[GetMapping]
-    public function indexAction()
+    public function indexAction(): int
     {
         return 0;
     }

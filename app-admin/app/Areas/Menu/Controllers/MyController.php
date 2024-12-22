@@ -19,7 +19,7 @@ class MyController extends Controller
     #[Autowired] protected AuthorizationInterface $authorization;
 
     #[GetMapping]
-    public function indexAction()
+    public function indexAction(): array
     {
         $fields = ['group_id', 'group_name', 'icon',
                    'items' => ['item_id', 'item_name', 'url', 'icon', 'group_id', 'permission_code']

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Areas\Admin\Controllers;
 
 use App\Controllers\Controller;
+use App\Entities\AdminActionLog;
 use App\Repositories\AdminActionLogRepository;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AuthorizationInterface;
@@ -12,6 +13,7 @@ use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[RequestMapping('/admin/action-log')]
@@ -22,7 +24,7 @@ class ActionLogController extends Controller
 
     #[Authorize]
     #[ViewGetMapping]
-    public function indexAction(int $page = 1, int $size = 10)
+    public function indexAction(int $page = 1, int $size = 10): Paginator
     {
         $restrictions = Restrictions::of(
             $this->request->all(),
@@ -35,7 +37,7 @@ class ActionLogController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[GetMapping]
-    public function detailAction(int $id)
+    public function detailAction(int $id): AdminActionLog|string
     {
         $adminActionLog = $this->adminActionLogRepository->get($id);
         if ($adminActionLog->admin_id === $this->identity->getId() || $this->authorization->isAllowed('detail')) {
@@ -47,7 +49,7 @@ class ActionLogController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[ViewGetMapping]
-    public function latestAction(int $page = 1, int $size = 10)
+    public function latestAction(int $page = 1, int $size = 10): Paginator
     {
         $restrictions = Restrictions::of($this->request->all(), ['handler', 'client_ip', 'created_time@=', 'tag']);
         $restrictions->eq('admin_id', $this->identity->getId());

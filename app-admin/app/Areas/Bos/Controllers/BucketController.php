@@ -18,13 +18,13 @@ class BucketController extends Controller
     #[Autowired] protected ClientInterface $bosClient;
 
     #[ViewGetMapping]
-    public function indexAction()
+    public function indexAction(): array
     {
         return $this->bosClient->listBuckets();
     }
 
     #[PostMapping]
-    public function createAction($bucket_name, $base_url)
+    public function createAction($bucket_name, $base_url): array
     {
         return $this->bosClient->createBucket($bucket_name, $base_url);
     }

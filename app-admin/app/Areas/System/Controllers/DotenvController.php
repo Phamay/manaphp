@@ -25,7 +25,7 @@ class DotenvController extends Controller
     public const REDIS_KEY = '.env';
 
     #[ViewGetMapping]
-    public function indexAction(string $app_id = '')
+    public function indexAction(string $app_id = ''): array
     {
         if ($app_id === '') {
             return [];
@@ -40,7 +40,7 @@ class DotenvController extends Controller
     }
 
     #[GetMapping]
-    public function appsAction()
+    public function appsAction(): array
     {
         $apps = $this->redisDb->hKeys(self::REDIS_KEY);
         sort($apps);
@@ -49,7 +49,7 @@ class DotenvController extends Controller
     }
 
     #[PostMapping]
-    public function createAction(string $app_id, string $env)
+    public function createAction(string $app_id, string $env): ?string
     {
         if ($this->redisDb->hExists(self::REDIS_KEY, $app_id)) {
             return "{$app_id}已存在";
@@ -63,10 +63,12 @@ class DotenvController extends Controller
         $this->dotenvLogRepository->create($dotenvLog);
 
         $this->redisDb->hSet(self::REDIS_KEY, $app_id, $env);
+
+        return null;
     }
 
     #[PostMapping]
-    public function editAction(string $app_id, string $env)
+    public function editAction(string $app_id, string $env): string|int
     {
         if (!$this->redisDb->hExists(self::REDIS_KEY, $app_id)) {
             return "{$app_id}不存在";
@@ -84,10 +86,11 @@ class DotenvController extends Controller
         $this->dotenvLogRepository->create($dotenvLog);
 
         $this->redisDb->hSet(self::REDIS_KEY, $app_id, $env);
+        return 0;
     }
 
     #[PostMapping]
-    public function deleteAction(string $app_id)
+    public function deleteAction(string $app_id): void
     {
         $this->redisDb->hDel(self::REDIS_KEY, $app_id);
     }

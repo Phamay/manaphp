@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Areas\User\Controllers;
 
 use App\Controllers\Controller;
+use App\Events\UserActionLog;
 use App\Repositories\UserActionLogRepository;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AuthorizationInterface;
@@ -12,6 +13,7 @@ use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[RequestMapping('/user/action-log')]
@@ -22,7 +24,7 @@ class ActionLogController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[GetMapping]
-    public function detailAction(int $id)
+    public function detailAction(int $id): UserActionLog|string
     {
         $userActionLog = $this->userActionLogRepository->get($id);
 
@@ -35,7 +37,7 @@ class ActionLogController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[ViewGetMapping]
-    public function latestAction(int $page = 1, int $size = 10)
+    public function latestAction(int $page = 1, int $size = 10): Paginator
     {
         $restrictions = Restrictions::of($this->request->all(), ['handler', 'client_ip', 'created_time@=', 'tag']);
         $restrictions->eq('user_id', $this->identity->getId());

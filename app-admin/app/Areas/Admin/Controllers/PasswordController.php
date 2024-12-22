@@ -10,6 +10,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -32,7 +33,7 @@ class PasswordController extends Controller
     #[Config] protected string $app_name;
 
     #[GetMapping]
-    public function captchaAction()
+    public function captchaAction(): ResponseInterface
     {
         return $this->captcha->generate();
     }
@@ -49,7 +50,7 @@ class PasswordController extends Controller
     }
 
     #[PostMapping('forget')]
-    public function doForgetAction(string $admin_name, string $email)
+    public function doForgetAction(string $admin_name, string $email): ResponseInterface|string
     {
         $admin = $this->adminRepository->first(['admin_name' => $admin_name]);
         if (!$admin || $admin->email !== $email) {
@@ -86,7 +87,7 @@ class PasswordController extends Controller
     }
 
     #[PostMapping('reset')]
-    public function doResetAction(string $token, string $password)
+    public function doResetAction(string $token, string $password): string|ResponseInterface
     {
         try {
             $claims = jwt_decode($token, 'admin.password.forget');
@@ -105,7 +106,7 @@ class PasswordController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[ViewPostMapping]
-    public function changeAction(string $old_password, string $new_password, string $new_password_confirm)
+    public function changeAction(string $old_password, string $new_password, string $new_password_confirm): int|string
     {
         $admin = $this->adminRepository->get($this->identity->getId());
         if (!$admin->verifyPassword($old_password)) {
@@ -119,5 +120,7 @@ class PasswordController extends Controller
 
         $this->adminRepository->update($admin);
         $this->session->destroy();
+
+        return 0;
     }
 }

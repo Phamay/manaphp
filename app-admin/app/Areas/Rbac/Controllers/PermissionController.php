@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Areas\Rbac\Controllers;
 
+use App\Areas\Rbac\Entities\Permission;
 use App\Areas\Rbac\Repositories\PermissionRepository;
 use App\Areas\Rbac\Repositories\RolePermissionRepository;
 use App\Areas\Rbac\Services\PermissionService;
@@ -10,6 +11,7 @@ use App\Areas\Rbac\Services\RoleService;
 use App\Controllers\Controller;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -26,7 +28,7 @@ class PermissionController extends Controller
     #[Autowired] protected RoleService $roleService;
 
     #[ViewGetMapping]
-    public function indexAction()
+    public function indexAction(): array
     {
         $fields = ['roles' => ['role_id', 'display_name']];
         $restrictions = Restrictions::of($this->request->all(), ['permission_id']);
@@ -36,7 +38,7 @@ class PermissionController extends Controller
     }
 
     #[GetMapping]
-    public function listAction()
+    public function listAction(): array
     {
         $fields = ['permission_id', 'permission_code', 'display_name'];
         $orders = ['permission_code' => SORT_ASC];
@@ -44,7 +46,7 @@ class PermissionController extends Controller
     }
 
     #[PostMapping]
-    public function rebuildAction()
+    public function rebuildAction(): ResponseInterface
     {
         $counts = $this->permissionService->rebuild();
 
@@ -61,13 +63,13 @@ class PermissionController extends Controller
     }
 
     #[PostMapping]
-    public function editAction()
+    public function editAction(): Permission
     {
         return $this->permissionRepository->update($this->request->all());
     }
 
     #[PostMapping]
-    public function deleteAction(int $permission_id)
+    public function deleteAction(int $permission_id): ?Permission
     {
         $this->rolePermissionRepository->deleteAll(['permission_id' => $permission_id]);
 

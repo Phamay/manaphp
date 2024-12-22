@@ -13,6 +13,7 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Helper\Str;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -34,7 +35,7 @@ class SessionController extends Controller
     #[Config] protected string $app_env;
 
     #[GetMapping]
-    public function captchaAction()
+    public function captchaAction(): ResponseInterface
     {
         return $this->captcha->generate();
     }
@@ -102,7 +103,7 @@ class SessionController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[GetMapping(['/logout', '/user/session/logout'])]
-    public function logoutAction()
+    public function logoutAction(): ResponseInterface
     {
         $this->session->destroy();
 

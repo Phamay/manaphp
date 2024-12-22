@@ -34,7 +34,7 @@ class ItemController extends Controller
     #[Autowired] protected AuthorizationInterface $authorization;
 
     #[ViewGetMapping]
-    public function indexAction(int $group_id = 0)
+    public function indexAction(int $group_id = 0): array
     {
         $restrictions = Restrictions::of($this->request->all(), ['group_id']);
         if ($group_id > 0) {
@@ -46,25 +46,25 @@ class ItemController extends Controller
     }
 
     #[PostMapping]
-    public function createAction()
+    public function createAction(): Item
     {
         return $this->itemRepository->create($this->request->all());
     }
 
     #[PostMapping]
-    public function editAction()
+    public function editAction(): Item
     {
         return $this->itemRepository->update($this->request->all());
     }
 
     #[PostMapping]
-    public function deleteAction(int $item_id)
+    public function deleteAction(int $item_id): ?Item
     {
         return $this->itemRepository->deleteById($item_id);
     }
 
     #[PostMapping]
-    public function scanAction()
+    public function scanAction(): void
     {
         $items = [];
         foreach ($this->itemRepository->all() as $item) {

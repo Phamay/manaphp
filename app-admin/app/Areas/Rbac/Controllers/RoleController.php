@@ -15,6 +15,7 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 use function implode;
 
@@ -27,7 +28,7 @@ class RoleController extends Controller
     #[Autowired] protected RoleService $roleService;
 
     #[ViewGetMapping]
-    public function indexAction(string $keyword = '', int $page = 1, int $size = 10)
+    public function indexAction(string $keyword = '', int $page = 1, int $size = 10): Paginator
     {
         $restrictions = Restrictions::create()
             ->contains(['role_name', 'display_name'], $keyword);
@@ -38,13 +39,13 @@ class RoleController extends Controller
     }
 
     #[GetMapping]
-    public function listAction()
+    public function listAction(): array
     {
         return $this->roleRepository->all([], ['role_id', 'display_name']);
     }
 
     #[PostMapping]
-    public function createAction(string $role_name)
+    public function createAction(string $role_name): Role
     {
         $permissions = ',' . implode(',', $this->roleService->getPermissions($role_name, [])) . ',';
 
@@ -55,13 +56,13 @@ class RoleController extends Controller
     }
 
     #[PostMapping]
-    public function editAction()
+    public function editAction(): Role
     {
         return $this->roleRepository->update($this->request->all());
     }
 
     #[PostMapping]
-    public function disableAction(int $role_id)
+    public function disableAction(int $role_id): Role
     {
         $role = new Role();
 
@@ -72,7 +73,7 @@ class RoleController extends Controller
     }
 
     #[PostMapping]
-    public function enableAction(int $role_id)
+    public function enableAction(int $role_id): Role
     {
         $role = new Role();
 
@@ -83,13 +84,13 @@ class RoleController extends Controller
     }
 
     #[GetMapping]
-    public function detailAction(int $role_id)
+    public function detailAction(int $role_id): ?Role
     {
         return $this->roleRepository->first(['role_id' => $role_id]);
     }
 
     #[PostMapping]
-    public function deleteAction(int $role_id)
+    public function deleteAction(int $role_id): string|Role|null
     {
         if ($this->adminRoleRepository->exists(['role_id' => $role_id])) {
             return '删除失败: 有用户绑定到此角色';

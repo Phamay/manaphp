@@ -7,6 +7,7 @@ use App\Areas\Rbac\Repositories\AdminRoleRepository;
 use App\Areas\Rbac\Repositories\RoleRepository;
 use App\Controllers\Controller;
 use App\Entities\Admin;
+use App\Entities\AdminActionLog;
 use App\Entities\AdminLoginLog;
 use App\Repositories\AdminLoginLogRepository;
 use App\Repositories\AdminRepository;
@@ -16,6 +17,7 @@ use ManaPHP\Helper\Ip;
 use ManaPHP\Helper\Str;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
@@ -39,7 +41,7 @@ class SessionController extends Controller
     #[Config] protected string $app_env;
 
     #[GetMapping]
-    public function captchaAction()
+    public function captchaAction(): ResponseInterface
     {
         return $this->captcha->generate();
     }
@@ -56,7 +58,7 @@ class SessionController extends Controller
     }
 
     #[PostMapping('/login')]
-    public function doLoginAction(string $code, string $admin_name, string $password)
+    public function doLoginAction(string $code, string $admin_name, string $password): string|AdminLoginLog
     {
         if (!$udid = $this->cookies->get('CLIENT_UDID')) {
             $this->cookies->set('CLIENT_UDID', Str::random(16), strtotime('10 year'), '/');
@@ -119,7 +121,7 @@ class SessionController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[GetMapping(['/logout', '/admin/session/logout'])]
-    public function logoutAction()
+    public function logoutAction(): ResponseInterface
     {
         $this->session->destroy();
 

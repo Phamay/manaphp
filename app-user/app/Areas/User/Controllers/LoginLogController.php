@@ -10,6 +10,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Query\Paginator;
 use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[RequestMapping('/user/login-log')]
@@ -19,7 +20,7 @@ class LoginLogController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[ViewGetMapping]
-    public function latestAction(int $page = 1, int $size = 10)
+    public function latestAction(int $page = 1, int $size = 10): Paginator
     {
         $fields = ['login_id', 'client_udid', 'user_agent', 'client_ip', 'created_time'];
 

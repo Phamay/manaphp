@@ -10,6 +10,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
@@ -48,7 +49,7 @@ class PasswordController extends Controller
     }
 
     #[PostMapping('forget')]
-    public function doForgetAction(string $user_name, string $email)
+    public function doForgetAction(string $user_name, string $email): ResponseInterface|string
     {
         $user = $this->userRepository->first(['user_name' => $user_name]);
         if (!$user || $user->email !== $email) {
@@ -85,7 +86,7 @@ class PasswordController extends Controller
     }
 
     #[PostMapping('reset')]
-    public function doResetAction(string $token, string $password)
+    public function doResetAction(string $token, string $password): ResponseInterface|string
     {
         try {
             $claims = jwt_decode($token, 'user.password.forget');
