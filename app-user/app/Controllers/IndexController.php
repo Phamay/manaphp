@@ -8,8 +8,8 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Version;
+use ManaPHP\Viewing\FlashInterface;
 use ManaPHP\Viewing\View\Attribute\ViewMapping;
-use ManaPHP\Viewing\View\FlashInterface;
 use function date;
 
 #[Authorize(Authorize::GUEST)]

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Widgets;
 
-use ManaPHP\Viewing\View\WidgetInterface;
+use ManaPHP\Viewing\WidgetInterface;
 
 abstract class Widget implements WidgetInterface
 {
