@@ -5,5 +5,5 @@ namespace App\Listeners;
 
 class UserActionLogListenerContext
 {
-    public $logged = false;
+    public bool $logged = false;
 }
