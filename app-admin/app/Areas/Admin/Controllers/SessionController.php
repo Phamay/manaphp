@@ -17,9 +17,8 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
-use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewMapping;
+use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
 use function substr;
 
 #[Authorize(Authorize::GUEST)]
@@ -50,7 +49,7 @@ class SessionController extends Controller
         return $vars;
     }
 
-    #[ViewMapping('/login', vars: 'loginVars'), PostMapping('/login')]
+    #[ViewPostMapping('/login', vars: 'loginVars')]
     public function loginAction(string $code, string $admin_name, string $password)
     {
         if (!$udid = $this->cookies->get('CLIENT_UDID')) {
