@@ -12,7 +12,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
+use ManaPHP\Viewing\View\Attribute\ViewPostMapping;
 
 #[Authorize(Authorize::GUEST)]
 #[RequestMapping('/user/account')]

@@ -10,9 +10,9 @@ use ManaPHP\Http\AuthorizationInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[RequestMapping('/admin/action-log')]
 class ActionLogController extends Controller

@@ -8,9 +8,9 @@ use App\Repositories\AdminLoginLogRepository;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 
 #[RequestMapping('/admin/login-log')]
 class LoginLogController extends Controller

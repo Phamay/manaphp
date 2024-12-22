@@ -15,9 +15,9 @@ use ManaPHP\Http\InputInterface;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewGetMapping;
 use ManaPHP\Persistence\Page;
 use ManaPHP\Persistence\Restrictions;
+use ManaPHP\Viewing\View\Attribute\ViewGetMapping;
 use function str_contains;
 
 #[Authorize]

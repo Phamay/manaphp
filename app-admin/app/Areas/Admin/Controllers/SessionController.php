@@ -21,7 +21,7 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\SessionInterface;
-use ManaPHP\Mvc\View\Attribute\ViewMapping;
+use ManaPHP\Viewing\View\Attribute\ViewMapping;
 use function substr;
 
 #[Authorize(Authorize::GUEST)]

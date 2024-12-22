@@ -15,8 +15,8 @@ use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\SessionInterface;
 use ManaPHP\Mailing\MailerInterface;
-use ManaPHP\Mvc\View\Attribute\ViewMapping;
-use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
+use ManaPHP\Viewing\View\Attribute\ViewMapping;
+use ManaPHP\Viewing\View\Attribute\ViewPostMapping;
 
 #[Authorize(Authorize::GUEST)]
 #[RequestMapping('/user/password')]
