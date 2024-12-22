@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Areas\User\Controllers;
 
 use App\Controllers\Controller;
-use App\Entities\User;
 use App\Repositories\UserRepository;
 use Exception;
 use ManaPHP\Di\Attribute\Autowired;
@@ -14,6 +13,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mailing\MailerInterface;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
 
 #[Authorize(Authorize::GUEST)]
@@ -32,7 +32,8 @@ class PasswordController extends Controller
         return $this->captcha->generate();
     }
 
-    public function forgetVars(): array
+    #[ViewMapping]
+    public function forgetAction(): array
     {
         $vars = [];
 
@@ -42,10 +43,9 @@ class PasswordController extends Controller
         return $vars;
     }
 
-    #[ViewPostMapping(vars: 'forgetVars')]
-    public function forgetAction(string $user_name, string $email)
+    #[PostMapping('forget')]
+    public function doForgetAction(string $user_name, string $email)
     {
-
         $user = $this->userRepository->first(['user_name' => $user_name]);
         if (!$user || $user->email !== $email) {
             return '账号不存在或账号与邮箱不匹配';
@@ -64,7 +64,8 @@ class PasswordController extends Controller
         return $this->response->json(['code' => 0, 'msg' => '重置密码连接已经发送到您的邮箱']);
     }
 
-    public function resetVars(): array
+    #[ViewMapping]
+    public function resetAction(): array
     {
         $token = $this->request->input('token');
         try {
@@ -79,8 +80,8 @@ class PasswordController extends Controller
         ];
     }
 
-    #[ViewPostMapping(vars: 'resetVars')]
-    public function resetAction(string $token, string $password)
+    #[PostMapping('reset')]
+    public function doResetAction(string $token, string $password)
     {
         try {
             $claims = jwt_decode($token, 'user.password.forget');

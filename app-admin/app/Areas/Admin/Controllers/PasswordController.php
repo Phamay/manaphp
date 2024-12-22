@@ -11,8 +11,10 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
+use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mailing\MailerInterface;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
 
 #[Authorize(Authorize::GUEST)]
@@ -31,7 +33,8 @@ class PasswordController extends Controller
         return $this->captcha->generate();
     }
 
-    public function forgetVars(): array
+    #[ViewMapping]
+    public function forgetAction(): array
     {
         $vars = [];
 
@@ -41,8 +44,8 @@ class PasswordController extends Controller
         return $vars;
     }
 
-    #[ViewPostMapping(vars: 'forgetVars')]
-    public function forgetAction(string $admin_name, string $email)
+    #[PostMapping('forget')]
+    public function doForgetAction(string $admin_name, string $email)
     {
         $admin = $this->adminRepository->first(['admin_name' => $admin_name]);
         if (!$admin || $admin->email !== $email) {
@@ -62,7 +65,8 @@ class PasswordController extends Controller
         return $this->response->json(['code' => 0, 'msg' => '重置密码连接已经发送到您的邮箱']);
     }
 
-    public function resetVars(): array
+    #[ViewMapping]
+    public function resetAction(): array
     {
         $token = $this->request->input('token');
         try {
@@ -77,8 +81,8 @@ class PasswordController extends Controller
         ];
     }
 
-    #[ViewPostMapping(vars: 'resetVars')]
-    public function resetAction(string $token, string $password)
+    #[PostMapping('reset')]
+    public function doResetAction(string $token, string $password)
     {
         try {
             $claims = jwt_decode($token, 'admin.password.forget');

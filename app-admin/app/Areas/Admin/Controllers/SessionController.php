@@ -17,8 +17,9 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
+use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
-use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use function substr;
 
 #[Authorize(Authorize::GUEST)]
@@ -39,7 +40,8 @@ class SessionController extends Controller
         return $this->captcha->generate();
     }
 
-    public function loginVars(): array
+    #[ViewMapping('/login')]
+    public function loginAction(): array
     {
         $vars = [];
 
@@ -49,8 +51,8 @@ class SessionController extends Controller
         return $vars;
     }
 
-    #[ViewPostMapping('/login', vars: 'loginVars')]
-    public function loginAction(string $code, string $admin_name, string $password)
+    #[PostMapping('/login')]
+    public function doLoginAction(string $code, string $admin_name, string $password)
     {
         if (!$udid = $this->cookies->get('CLIENT_UDID')) {
             $this->cookies->set('CLIENT_UDID', Str::random(16), strtotime('10 year'), '/');
