@@ -8,12 +8,23 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Version;
+use function apache_get_version;
+use function date;
+use function function_exists;
+use function get_declared_classes;
+use function get_loaded_extensions;
+use function implode;
+use function ini_get;
+use function php_ini_loaded_file;
+use function php_uname;
+use function sort;
 
 #[Authorize]
 #[RequestMapping('/system/information')]
 class InformationController extends Controller
 {
-    public function indexVars(): array
+    #[ViewMapping]
+    public function indexAction(): array
     {
         $data = [];
 
@@ -38,11 +49,5 @@ class InformationController extends Controller
         $data['loaded_classes'] = get_declared_classes();
 
         return ['data' => $data];
-    }
-
-    #[ViewMapping(vars: 'indexVars')]
-    public function indexAction()
-    {
-
     }
 }

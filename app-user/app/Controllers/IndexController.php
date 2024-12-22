@@ -8,6 +8,7 @@ use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Version;
+use function date;
 
 #[Authorize(Authorize::GUEST)]
 #[RequestMapping('')]
@@ -19,7 +20,8 @@ class IndexController extends Controller
         return $this->response->redirect('about');
     }
 
-    public function aboutVars(): array
+    #[ViewMapping]
+    public function aboutAction(): array
     {
         $vars = [];
 
@@ -29,11 +31,5 @@ class IndexController extends Controller
         $this->flash->error(date('Y-m-d H:i:s'));
 
         return $vars;
-    }
-
-    #[ViewMapping(vars: 'aboutVars')]
-    public function aboutAction()
-    {
-
     }
 }
