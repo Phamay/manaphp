@@ -10,7 +10,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\CaptchaInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
-use ManaPHP\Http\Router\Attribute\PostMapping;
+use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Mailing\MailerInterface;
 use ManaPHP\Mvc\View\Attribute\ViewPostMapping;
@@ -25,7 +25,7 @@ class PasswordController extends Controller
 
     #[Config] protected string $app_name;
 
-    #[PostMapping]
+    #[GetMapping]
     public function captchaAction()
     {
         return $this->captcha->generate();
