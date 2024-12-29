@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Bos\Controllers;
@@ -26,7 +27,11 @@ class ObjectController extends Controller
     }
 
     #[ViewGetMapping]
-    public function indexAction($bucket_name = '', string $prefix = '', string $extension = '', int $page = 1,
+    public function indexAction(
+        $bucket_name = '',
+        string $prefix = '',
+        string $extension = '',
+        int $page = 1,
         int $size = 10
     ): array|string {
         $filters = [];

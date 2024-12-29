@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\System\Controllers;
@@ -32,7 +33,11 @@ class DotenvController extends Controller
         } else {
             $current = [['app_id' => $app_id, 'env' => $this->redisDb->hGet(self::REDIS_KEY, $app_id) ?: '']];
             $restrictions = ['app_id' => $app_id];
-            $logs = $this->dotenvLogRepository->paginate($restrictions, [], ['id' => SORT_DESC], Page::of(1, 10)
+            $logs = $this->dotenvLogRepository->paginate(
+                $restrictions,
+                [],
+                ['id' => SORT_DESC],
+                Page::of(1, 10)
             )->items;
 
             return compact('current', 'logs');

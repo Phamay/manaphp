@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Rbac\Services;
@@ -40,7 +41,10 @@ class RoleService
         }
     }
 
-    protected function getPermissionsInternal(array $controllerPermissions, array $actionPermissions, string $role,
+    protected function getPermissionsInternal(
+        array $controllerPermissions,
+        array $actionPermissions,
+        string $role,
         array $granted
     ): array {
         $permissions = [];
@@ -107,7 +111,10 @@ class RoleService
         foreach ($this->roleRepository->all() as $role) {
             $granted = $this->getGrantedPermissions($role->role_id);
             $permissions = $this->getPermissionsInternal(
-                $controllerPermissions, $actionPermissions, $role->role_name, $granted
+                $controllerPermissions,
+                $actionPermissions,
+                $role->role_name,
+                $granted
             );
             $role->permissions = implode(',', $permissions);
 

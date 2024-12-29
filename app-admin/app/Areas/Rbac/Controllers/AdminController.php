@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Rbac\Controllers;
@@ -124,7 +125,8 @@ class AdminController extends Controller
 
         $old_role_ids = $this->adminRoleRepository->values('role_id', ['admin_id' => $admin->admin_id]);
         foreach (array_diff($old_role_ids, $role_ids) as $role_id) {
-            $adminRole = $this->adminRoleRepository->firstOrFail(['admin_id' => $admin->admin_id, 'role_id' => $role_id]
+            $adminRole = $this->adminRoleRepository->firstOrFail(
+                ['admin_id' => $admin->admin_id, 'role_id' => $role_id]
             );
             $this->adminRoleRepository->delete($adminRole);
         }
@@ -147,7 +149,9 @@ class AdminController extends Controller
     #[GetMapping]
     public function rolesAction(): array
     {
-        return $this->roleRepository->all(['role_name!=' => ['guest', 'user']], ['role_id', 'display_name']
+        return $this->roleRepository->all(
+            ['role_name!=' => ['guest', 'user']],
+            ['role_id', 'display_name']
         );
     }
 }

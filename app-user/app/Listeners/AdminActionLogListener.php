@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Events\UserActionLog;
 use App\Entities\AdminActionLog;
+use App\Events\UserActionLog;
 use App\Repositories\AdminActionLogRepository;
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Db\Event\DbExecuting;
@@ -50,15 +51,19 @@ class AdminActionLogListener
         if ($context->logged) {
             return;
         }
-		
-		if ($event instanceof DbExecuting) {
+
+        if ($event instanceof DbExecuting) {
             if (!$this->dispatcher->isInvoking()) {
                 return;
             }
         }
 
         if ($event instanceof UserActionLog) {
-            if ($this->dispatcher->isInvoking() || str_contains($this->dispatcher->getController(), '\\Areas\\Admin\\')) {
+            if ($this->dispatcher->isInvoking()
+                || str_contains(
+                    $this->dispatcher->getController(), '\\Areas\\Admin\\'
+                )
+            ) {
                 return;
             }
         }

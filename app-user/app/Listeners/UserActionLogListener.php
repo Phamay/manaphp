@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Listeners;
@@ -52,7 +53,8 @@ class UserActionLogListener
         if ($event instanceof DbExecuting) {
             if (!$this->dispatcher->isInvoking()
                 || !str_contains(
-                    $this->dispatcher->getController(), '\\Areas\\User\\'
+                    $this->dispatcher->getController(),
+                    '\\Areas\\User\\'
                 )
             ) {
                 return;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Admin\Controllers;
@@ -7,7 +8,6 @@ use App\Areas\Rbac\Repositories\AdminRoleRepository;
 use App\Areas\Rbac\Repositories\RoleRepository;
 use App\Controllers\Controller;
 use App\Entities\Admin;
-use App\Entities\AdminActionLog;
 use App\Entities\AdminLoginLog;
 use App\Repositories\AdminLoginLogRepository;
 use App\Repositories\AdminRepository;

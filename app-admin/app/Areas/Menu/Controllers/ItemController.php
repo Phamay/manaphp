@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Menu\Controllers;
@@ -91,7 +92,8 @@ class ItemController extends Controller
             $rMethod = new ReflectionMethod($controller, $action);
 
             if (($attribute = $rMethod->getAttributes(
-                    ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF
+                    ViewMappingInterface::class,
+                    ReflectionAttribute::IS_INSTANCEOF
                 )[0]
                     ?? null) === null
             ) {

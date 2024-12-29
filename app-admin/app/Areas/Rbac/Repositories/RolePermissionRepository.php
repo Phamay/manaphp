@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Areas\Rbac\Repositories;
@@ -11,5 +12,4 @@ use ManaPHP\Db\Repository;
  */
 class RolePermissionRepository extends Repository
 {
-
 }
