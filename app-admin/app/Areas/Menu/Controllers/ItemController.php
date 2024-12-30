@@ -27,6 +27,7 @@ use function method_exists;
 use function str_contains;
 use function str_starts_with;
 
+#[LogInterceptor]
 #[Authorize]
 #[RequestMapping('/menu/item')]
 class ItemController extends Controller

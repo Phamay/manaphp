@@ -10,7 +10,7 @@ use ManaPHP\Http\Interceptor;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 class LogInterceptor extends Interceptor
 {
     #[Autowired] protected LoggerInterface $logger;
