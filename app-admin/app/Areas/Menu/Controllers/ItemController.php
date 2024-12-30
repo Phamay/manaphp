@@ -7,6 +7,7 @@ namespace App\Areas\Menu\Controllers;
 use App\Areas\Menu\Entities\Item;
 use App\Areas\Menu\Repositories\ItemRepository;
 use App\Controllers\Controller;
+use App\Interceptors\LogInterceptor;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Str;
 use ManaPHP\Http\AuthorizationInterface;
@@ -52,6 +53,7 @@ class ItemController extends Controller
         return $this->itemRepository->create($this->request->all());
     }
 
+    #[LogInterceptor]
     #[PostMapping]
     public function editAction(): Item
     {
