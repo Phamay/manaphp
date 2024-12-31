@@ -7,12 +7,12 @@ namespace App\Commands;
 class TestCommand extends Command
 {
     /**
-     * demo for you
+     * demo how to use command
      *
-     * @param string $name your name
+     * @param string $name
      */
-    public function defaultAction($name = 'manaphp')
+    public function defaultAction(string $name = 'manaphp'): void
     {
-        $this->console->debug('hello {name}!', ['name' => $name]);
+        $this->console->writeLn(sprintf('Hello %s!', $name));
     }
 }
