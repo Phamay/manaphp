@@ -10,5 +10,4 @@ return [
     'ManaPHP\Http\RouterInterface'          => ['prefix' => ''],
     'ManaPHP\Identifying\IdentityInterface' => 'ManaPHP\Identifying\Identity\Adapter\Session',
     'ManaPHP\Mailing\MailerInterface'       => 'ManaPHP\Mailing\Mailer\Adapter\File',
-    'ManaPHP\Eventing\TracerInterface'      => ['verbosity' => \ManaPHP\Eventing\Attribute\Verbosity::MEDIUM],
 ];
