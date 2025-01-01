@@ -80,11 +80,11 @@ class ItemController extends Controller
             if (($attribute = $rClass->getAttributes(RequestMapping::class, ReflectionAttribute::IS_INSTANCEOF)[0] ??
                     null) !== null
             ) {
-                /** @var RequestMapping $controllerRequestMapping */
-                $controllerRequestMapping = $attribute->newInstance();
-                $controllerPath = $controllerRequestMapping->getPath();
+                /** @var RequestMapping $requestMapping */
+                $requestMapping = $attribute->newInstance();
+                $prefix = $requestMapping->getPath();
             } else {
-                $controllerPath = null;
+                $prefix = null;
             }
 
             $action = 'indexAction';
@@ -117,7 +117,7 @@ class ItemController extends Controller
             }
 
             if (!str_starts_with($path, '/')) {
-                $path = $controllerPath ? ($controllerPath . '/' . $path) : $path;
+                $path = $prefix ? ($prefix . '/' . $path) : $path;
             }
 
             if (!isset($items[$path])) {
