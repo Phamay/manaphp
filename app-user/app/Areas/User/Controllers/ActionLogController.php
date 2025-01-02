@@ -29,7 +29,7 @@ class ActionLogController extends Controller
     {
         $userActionLog = $this->userActionLogRepository->get($id);
 
-        if ($userActionLog->user_id === $this->identity->getId() || $this->authorization->isAllowed('detail')) {
+        if ($userActionLog->user_id === $this->identity->getId() || $this->authorization->isAllowed(__METHOD__)) {
             return $userActionLog;
         } else {
             return '没有权限';

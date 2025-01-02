@@ -41,7 +41,7 @@ class ActionLogController extends Controller
     public function detailAction(int $id): AdminActionLog|string
     {
         $adminActionLog = $this->adminActionLogRepository->get($id);
-        if ($adminActionLog->admin_id === $this->identity->getId() || $this->authorization->isAllowed('detail')) {
+        if ($adminActionLog->admin_id === $this->identity->getId() || $this->authorization->isAllowed(__METHOD__)) {
             return $adminActionLog;
         } else {
             return '没有权限';

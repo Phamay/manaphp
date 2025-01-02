@@ -24,7 +24,7 @@ class AuthorizationFilter
 
     public function onAuthorizing(#[Event] RequestAuthorizing $event): void
     {
-        if ($this->authorization->isAllowed($event->action)) {
+        if ($this->authorization->isAllowed($event->controller . '::' . $event->action)) {
             return;
         }
 
