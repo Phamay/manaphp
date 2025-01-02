@@ -7,9 +7,7 @@ namespace App\Filters;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Exception\ForbiddenException;
-use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\AuthorizationInterface;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Server\Event\RequestAuthorizing;
@@ -23,13 +21,10 @@ class AuthorizationFilter
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
 
     public function onAuthorizing(#[Event] RequestAuthorizing $event): void
     {
-        SuppressWarnings::unused($event);
-
-        if ($this->authorization->isAllowed($this->dispatcher->getAction())) {
+        if ($this->authorization->isAllowed($event->action)) {
             return;
         }
 
@@ -38,7 +33,7 @@ class AuthorizationFilter
                 throw new NoCredentialException('No Credential or Invalid Credential');
             } else {
                 $redirect = $this->request->input('redirect', $this->request->url());
-                $login_url = str_contains($this->dispatcher->getController(), '\\Areas\\Admin\\') ? '/admin/login'
+                $login_url = str_contains($event->controller, '\\Areas\\Admin\\') ? '/admin/login'
                     : '/user/login';
                 $this->response->redirect(["$login_url?redirect=$redirect"]);
             }
