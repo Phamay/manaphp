@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Entities\AdminActionLog;
-use App\Events\UserActionLog;
 use App\Repositories\AdminActionLogRepository;
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Db\Event\DbExecuting;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Helper\Arr;
+use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\CookiesInterface;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RequestInterface;
+use ManaPHP\Http\Server\Event\RequestInvoked;
+use ManaPHP\Http\Server\Event\RequestInvoking;
 use ManaPHP\Identifying\IdentityInterface;
+use function json_stringify;
 use function str_contains;
 
 class AdminActionLogListener
@@ -25,7 +27,6 @@ class AdminActionLogListener
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected CookiesInterface $cookies;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected AdminActionLogRepository $adminActionLogRepository;
 
     protected function getTag(): int
@@ -43,29 +44,46 @@ class AdminActionLogListener
         return 0;
     }
 
-    public function onAdminActionLogAction(#[Event] DbExecuting|UserActionLog $event): void
+    public function onRequestInvoking(#[Event] RequestInvoking $event): void
+    {
+        /** @var AdminActionLogListenerContext $context */
+        $context = $this->getContext();
+        $context->invoking = true;
+        $context->handler = $event->controller . '::' . $event->action;
+    }
+
+    public function onRequestInvoked(#[Event] RequestInvoked $event): void
+    {
+        SuppressWarnings::unused($event);
+
+        /** @var AdminActionLogListenerContext $context */
+        $context = $this->getContext();
+
+        $context->invoking = false;
+    }
+
+    public function onDbExecuting(#[Event] DbExecuting $event): void
+    {
+        SuppressWarnings::unused($event);
+
+        /** @var AdminActionLogListenerContext $context */
+        $context = $this->getContext();
+        if ($context->logged) {
+            return;
+        }
+
+        if ($context->invoking && str_contains($context->handler, '\\Areas\\Admin\\')) {
+            $this->logAdminAction();
+        }
+    }
+
+    public function logAdminAction(): void
     {
         /** @var AdminActionLogListenerContext $context */
         $context = $this->getContext();
 
         if ($context->logged) {
             return;
-        }
-
-        if ($event instanceof DbExecuting) {
-            if (!$this->dispatcher->isInvoking()) {
-                return;
-            }
-        }
-
-        if ($event instanceof UserActionLog) {
-            if ($this->dispatcher->isInvoking()
-                || str_contains(
-                    $this->dispatcher->getController(), '\\Areas\\Admin\\'
-                )
-            ) {
-                return;
-            }
         }
 
         $context->logged = true;
@@ -83,9 +101,9 @@ class AdminActionLogListener
         $adminActionLog->client_ip = $this->request->ip();
         $adminActionLog->method = $this->request->method();
         $adminActionLog->url = $this->request->path();
-        $adminActionLog->tag = ((int)$this->getTag()) & 0xFFFFFFFF;
+        $adminActionLog->tag = $this->getTag() & 0xFFFFFFFF;
         $adminActionLog->data = json_stringify($data);
-        $adminActionLog->handler = (string)$this->dispatcher->getHandler();
+        $adminActionLog->handler = $context->handler;
         $adminActionLog->client_udid = $this->cookies->get('CLIENT_UDID');
 
         $this->adminActionLogRepository->create($adminActionLog);

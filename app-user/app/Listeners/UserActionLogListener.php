@@ -11,10 +11,13 @@ use ManaPHP\Db\Event\DbExecuting;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Helper\Arr;
+use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\CookiesInterface;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RequestInterface;
+use ManaPHP\Http\Server\Event\RequestInvoked;
+use ManaPHP\Http\Server\Event\RequestInvoking;
 use ManaPHP\Identifying\IdentityInterface;
+use function json_stringify;
 use function str_contains;
 
 class UserActionLogListener
@@ -24,7 +27,6 @@ class UserActionLogListener
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected CookiesInterface $cookies;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected UserActionLogRepository $userActionLogRepository;
 
     protected function getTag(): int
@@ -42,25 +44,47 @@ class UserActionLogListener
         return 0;
     }
 
-    public function onUserActionLogAction(#[Event] DbExecuting|UserActionLog $event): void
+    public function onRequestInvoking(#[Event] RequestInvoking $event): void
     {
+        /** @var UserActionLogListenerContext $context */
+        $context = $this->getContext();
+
+        $context->invoking = true;
+        $context->handler = $event->controller . '::' . $event->action;
+    }
+
+    public function onRequestInvoked(#[Event] RequestInvoked $event): void
+    {
+        SuppressWarnings::unused($event);
+
+        /** @var UserActionLogListenerContext $context */
+        $context = $this->getContext();
+
+        $context->invoking = false;
+    }
+
+    public function onDbExecuting(#[Event] DbExecuting $event): void
+    {
+        SuppressWarnings::unused($event);
+
         /** @var UserActionLogListenerContext $context */
         $context = $this->getContext();
         if ($context->logged) {
             return;
         }
 
-        if ($event instanceof DbExecuting) {
-            if (!$this->dispatcher->isInvoking()
-                || !str_contains(
-                    $this->dispatcher->getController(),
-                    '\\Areas\\User\\'
-                )
-            ) {
-                return;
-            }
+        if ($context->invoking && str_contains($context->handler, '\\Areas\\User\\')) {
+            $this->logUserAction();
         }
+    }
 
+    public function logUserAction(): void
+    {
+        /** @var UserActionLogListenerContext $context */
+        $context = $this->getContext();
+        if ($context->logged) {
+            return;
+        }
         $context->logged = true;
 
         $data = Arr::except($this->request->all(), ['_url']);
@@ -78,7 +102,7 @@ class UserActionLogListener
         $userActionLog->url = $this->request->path();
         $userActionLog->tag = $this->getTag() & 0xFFFFFFFF;
         $userActionLog->data = json_stringify($data);
-        $userActionLog->handler = (string)$this->dispatcher->getHandler();
+        $userActionLog->handler = $context->handler;
         $userActionLog->client_udid = $this->cookies->get('CLIENT_UDID');
 
         $this->userActionLogRepository->create($userActionLog);
