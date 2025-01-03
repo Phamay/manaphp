@@ -6,7 +6,8 @@ namespace App\Listeners;
 
 use App\Entities\UserActionLog;
 use App\Repositories\UserActionLogRepository;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbExecuting;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
@@ -20,14 +21,18 @@ use ManaPHP\Identifying\IdentityInterface;
 use function json_stringify;
 use function str_contains;
 
-class UserActionLogListener
+class UserActionLogListener implements ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected CookiesInterface $cookies;
     #[Autowired] protected UserActionLogRepository $userActionLogRepository;
+
+    public function getContext(): UserActionLogListenerContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     protected function getTag(): int
     {
@@ -46,7 +51,6 @@ class UserActionLogListener
 
     public function onRequestInvoking(#[Event] RequestInvoking $event): void
     {
-        /** @var UserActionLogListenerContext $context */
         $context = $this->getContext();
 
         $context->invoking = true;
@@ -57,7 +61,6 @@ class UserActionLogListener
     {
         SuppressWarnings::unused($event);
 
-        /** @var UserActionLogListenerContext $context */
         $context = $this->getContext();
 
         $context->invoking = false;
@@ -67,7 +70,6 @@ class UserActionLogListener
     {
         SuppressWarnings::unused($event);
 
-        /** @var UserActionLogListenerContext $context */
         $context = $this->getContext();
         if ($context->logged) {
             return;
@@ -80,7 +82,6 @@ class UserActionLogListener
 
     public function logUserAction(): void
     {
-        /** @var UserActionLogListenerContext $context */
         $context = $this->getContext();
         if ($context->logged) {
             return;

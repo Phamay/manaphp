@@ -6,7 +6,8 @@ namespace App\Listeners;
 
 use App\Entities\AdminActionLog;
 use App\Repositories\AdminActionLogRepository;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbExecuting;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
@@ -20,14 +21,18 @@ use ManaPHP\Identifying\IdentityInterface;
 use function json_stringify;
 use function str_contains;
 
-class AdminActionLogListener
+class AdminActionLogListener implements ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected CookiesInterface $cookies;
     #[Autowired] protected AdminActionLogRepository $adminActionLogRepository;
+
+    public function getContext(): AdminActionLogListenerContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     protected function getTag(): int
     {
@@ -46,7 +51,6 @@ class AdminActionLogListener
 
     public function onRequestInvoking(#[Event] RequestInvoking $event): void
     {
-        /** @var AdminActionLogListenerContext $context */
         $context = $this->getContext();
         $context->invoking = true;
         $context->handler = $event->controller . '::' . $event->action;
@@ -56,7 +60,6 @@ class AdminActionLogListener
     {
         SuppressWarnings::unused($event);
 
-        /** @var AdminActionLogListenerContext $context */
         $context = $this->getContext();
 
         $context->invoking = false;
@@ -66,7 +69,6 @@ class AdminActionLogListener
     {
         SuppressWarnings::unused($event);
 
-        /** @var AdminActionLogListenerContext $context */
         $context = $this->getContext();
         if ($context->logged) {
             return;
@@ -79,7 +81,6 @@ class AdminActionLogListener
 
     public function logAdminAction(): void
     {
-        /** @var AdminActionLogListenerContext $context */
         $context = $this->getContext();
 
         if ($context->logged) {
