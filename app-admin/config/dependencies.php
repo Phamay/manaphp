@@ -10,4 +10,10 @@ return [
     'ManaPHP\Http\RouterInterface'          => ['prefix' => ''],
     'ManaPHP\Identifying\IdentityInterface' => 'ManaPHP\Identifying\Identity\Adapter\Session',
     'ManaPHP\Mailing\MailerInterface'       => 'ManaPHP\Mailing\Mailer\Adapter\File',
+    'ManaPHP\Http\RequestHandlerInterface'  => [
+        'middlewares' => [
+            \ManaPHP\Http\Middlewares\RequestIdMiddleware::class,
+            \ManaPHP\Http\Middlewares\AuthorizationMiddleware::class,
+        ],
+    ],
 ];
