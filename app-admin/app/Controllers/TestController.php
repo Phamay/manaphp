@@ -7,6 +7,7 @@ namespace App\Controllers;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
+use ManaPHP\Http\Router\Attribute\SseGetMapping;
 use function sleep;
 
 #[Authorize]
@@ -25,6 +26,16 @@ class TestController extends Controller
     {
         for ($i = 0; $i < 10; $i++) {
             $this->response->write("chunk $i\n");
+            sleep(1);
+        }
+    }
+
+    #[Authorize(Authorize::GUEST)]
+    #[SseGetMapping]
+    public function sseAction(): void
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->response->writeSse(['id' => $i, 'data' => "hello $i"]);
             sleep(1);
         }
     }

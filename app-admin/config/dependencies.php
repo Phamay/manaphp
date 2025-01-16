@@ -14,6 +14,7 @@ return [
         'middlewares' => [
             \ManaPHP\Http\Middlewares\RequestIdMiddleware::class,
             \ManaPHP\Http\Middlewares\AuthorizationMiddleware::class,
+            \ManaPHP\Http\Middlewares\CorsMiddleware::class,
         ],
     ],
 ];
