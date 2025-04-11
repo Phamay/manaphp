@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use ManaPHP\Exception;
-
 class TestCommand extends Command
 {
     /**
@@ -15,8 +13,6 @@ class TestCommand extends Command
      */
     public function defaultAction(string $name = 'manaphp'): void
     {
-        $e = new Exception(['abc is {3}', 'xx']);
-        $this->console->writeLn($e->getMessage());
         $this->console->writeLn(sprintf('Hello %s!', $name));
     }
 }
