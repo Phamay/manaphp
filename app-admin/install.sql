@@ -12,9 +12,9 @@ MySQL - 5.7.27 : Database - manaphp
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`manaphp` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`ifund` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `manaphp`;
+USE `ifund`;
 
 /*Table structure for table `admin` */
 
@@ -195,7 +195,7 @@ CREATE TABLE `menu_item` (
 /*Data for the table `menu_item` */
 
 insert  into `menu_item`(`item_id`,`item_name`,`group_id`,`display_order`,`url`,`icon`,`permission_code`,`creator_name`,`updator_name`,`created_time`,`updated_time`) values
-(8,'角色权限',3,0,'/rbac/role-permission/indx','el-icon-arrow-right','rbac.role-permission::index','admin','admin',0,0),
+(8,'角色权限',3,0,'/rbac/role-permission/index','el-icon-arrow-right','rbac.role-permission::index','admin','admin',0,0),
 (4,'用户',3,3,'/rbac/admin/index','el-icon-arrow-right','rbac.admin::index','admin','admin',0,0),
 (9,'系统信息',5,0,'/system/information/index','el-icon-arrow-right','system.information::index','admin','',0,0),
 (5,'角色',3,0,'/rbac/role/index','el-icon-arrow-right','rbac.role::index','admin','admin',0,0),
