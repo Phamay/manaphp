@@ -143,7 +143,7 @@ CREATE TABLE `dotenv_log` (
   `created_date` int(11) NOT NULL,
   `created_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `menu_group` */
 
