@@ -8,4 +8,4 @@ ini_set('default_socket_timeout', -1);
 require __DIR__ . '/../vendor/autoload.php';
 
 $kernel = new Kernel();
-$kernel->start('ManaPHP\Http\ServerInterface');
+$kernel->start('ManaPHP\Ws\ServerInterface');
