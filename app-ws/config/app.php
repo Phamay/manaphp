@@ -1,20 +1,14 @@
 <?php
+declare(strict_types=1);
 
-return [
-    'id'         => 'ws',
-    'env'        => env('APP_ENV', 'prod'),
-    'debug'      => env('APP_DEBUG', false),
-    'master_key' => env('MASTER_KEY'),
-    'params'     => [],
-    'aliases'    => [
+return ['ManaPHP\Di\ConfigInterface' => [
+    'config' => [
+        'app_id'    => 'ws',
+        'app_name'  => 'ManaPHP管理系统',
+        'app_env'   => env('APP_ENV', 'prod'),
+        'app_debug' => env('APP_DEBUG', false),
+        'timezone'  => 'Asia/Shanghai',
+        'aliases'   => [
+        ],
     ],
-    'components' => [
-        'wsServer'  => ['port' => 9501],
-        'db'        => [env('DB_URL')],
-        'redis'     => [env('REDIS_URL')],
-        'logger'    => ['level' => env('LOGGER_LEVEL', 'info')],
-        'wspServer' => ['endpoint' => 'admin'],
-        'wspClient' => ['endpoint' => 'admin'],
-    ],
-    'plugins'    => [],
-];
+]];
