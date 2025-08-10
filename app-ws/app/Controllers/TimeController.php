@@ -3,7 +3,11 @@
 namespace App\Controllers;
 
 use ManaPHP\Coroutine;
+use ManaPHP\Ws\Attribute\CloseMapping;
+use ManaPHP\Ws\Attribute\OpenMapping;
+use ManaPHP\Ws\Router\Attribute\WebSocketMapping;
 
+#[WebSocketMapping('/time')]
 class TimeController extends Controller
 {
     /**
@@ -29,11 +33,13 @@ class TimeController extends Controller
         );
     }
 
+    #[OpenMapping]
     public function openAction($fd)
     {
         $this->last_time[$fd] = 0;
     }
 
+    #[CloseMapping]
     public function closeAction($fd)
     {
         unset($this->last_time[$fd]);

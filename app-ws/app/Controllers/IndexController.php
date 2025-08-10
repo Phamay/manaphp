@@ -2,8 +2,16 @@
 
 namespace App\Controllers;
 
+use ManaPHP\Ws\Attribute\CloseMapping;
+use ManaPHP\Ws\Attribute\MessageMapping;
+use ManaPHP\Ws\Attribute\OpenMapping;
+use ManaPHP\Ws\Message;
+use ManaPHP\Ws\Router\Attribute\WebSocketMapping;
+
+#[WebSocketMapping('/')]
 class IndexController extends Controller
 {
+    #[OpenMapping]
     public function openAction($fd)
     {
         //        $data = [];
@@ -17,12 +25,14 @@ class IndexController extends Controller
         $this->identity->set(jwt_decode($token, 'pusher.admin'));
     }
 
+    #[CloseMapping]
     public function closeAction($fd)
     {
 
     }
 
-    public function messageAction($data)
+    #[MessageMapping]
+    public function messageAction(Message $message)
     {
 
     }
