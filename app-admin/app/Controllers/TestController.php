@@ -32,9 +32,13 @@ class TestController extends Controller
     }
 
     #[Authorize(Authorize::GUEST)]
-    #[SseGetMapping]
+    #[GetMapping]
     public function sseAction(): void
     {
+        $this->response->setHeader('Content-Type', 'text/event-stream');
+        $this->response->setHeader('Connection', 'keep-alive');
+        $this->response->setHeader('Cache-Control', 'no-cache');
+
         for ($i = 0; $i < 10; $i++) {
             $this->response->write(new SseEvent(['id' => $i, 'data' => "hello $i"]));
             sleep(1);
