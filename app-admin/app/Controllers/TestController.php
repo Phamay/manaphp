@@ -8,6 +8,7 @@ use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Http\Router\Attribute\GetMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\Router\Attribute\SseGetMapping;
+use ManaPHP\Http\SseEvent;
 use function sleep;
 
 #[Authorize]
@@ -35,7 +36,7 @@ class TestController extends Controller
     public function sseAction(): void
     {
         for ($i = 0; $i < 10; $i++) {
-            $this->response->writeSse(['id' => $i, 'data' => "hello $i"]);
+            $this->response->write(new SseEvent(['id' => $i, 'data' => "hello $i"]));
             sleep(1);
         }
     }
