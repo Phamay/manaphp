@@ -34,6 +34,7 @@ class Item extends Entity
     #[MaxLength(64)]
     public string $icon;
 
+    #[MaxLength(64)]
     public string $permission_code;
 
     public string $creator_name;

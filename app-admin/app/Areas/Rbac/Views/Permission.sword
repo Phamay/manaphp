@@ -1,27 +1,24 @@
-<request-form>
-    <request-button @click="do_rebuild" type="primary" icon="el-icon-refresh">重新扫描</request-button>
-    <selector filterable v-model="filter.permission_code" :data="permission_codes"></selector>
-    <selector v-model="filter.grantable" :data="grantables"></selector>
-</request-form>
-<edit-form>
-    <edit-text prop="permission_id" disabled></edit-text>
-    <edit-text prop="permission_code" disabled></edit-text>
-    <edit-text prop="authorize" disabled></edit-text>
-    <edit-text prop="display_name"></edit-text>
-</edit-form>
-<result-table :data="filteredResponse" row-class-name="el-alert el-alert--warning is-light">
-    <result-index></result-index>
-    <result-id prop="permission_id"></result-id>
-    <result-column prop="permission_code" width="200" title="display_name"></result-column>
-    <result-tag prop="roles"></result-tag>
-    <result-column prop="grantable" width="80" label="可授权"></result-column>
-    <result-column prop="authorize" width="100"></result-column>
-    <result-timestamp prop="updated_time"></result-timestamp>
-    <result-op width="125" v-slot="{row}">
-        <show-edit :row="row"></show-edit>
-        <show-delete :row="row"></show-delete>
-    </result-op>
-</result-table>
+<m-navbar>
+    <m-button @click="do_rebuild" type="primary" icon="el-icon-refresh">重新扫描</m-button>
+    <m-selector filterable v-model="filter.permission_code" :data="permission_codes"></m-selector>
+    <m-selector v-model="filter.grantable" :data="grantables"></m-selector>
+</m-navbar>
+<m-dialog mode="edit">
+    <m-text prop="permission_id" disabled></m-text>
+    <m-text prop="permission_code" disabled></m-text>
+    <m-text prop="authorize" disabled></m-text>
+    <m-text prop="display_name"></m-text>
+</m-dialog>
+<m-table :data="filteredResponse" row-class-name="el-alert el-alert--warning is-light">
+    <m-index></m-index>
+    <m-id prop="permission_id"></m-id>
+    <m-text prop="permission_code" width="200" title="display_name"></m-text>
+    <m-tag prop="roles"></m-tag>
+    <m-text prop="grantable" width="80" label="可授权"></m-text>
+    <m-text prop="authorize" width="100"></m-text>
+    <m-timestamp prop="updated_time"></m-timestamp>
+    <m-ops ops="edit,delete"></m-ops>
+</m-table>
 @section('script')
     <script>
 

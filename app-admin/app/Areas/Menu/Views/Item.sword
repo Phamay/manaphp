@@ -1,39 +1,37 @@
-<request-form @open-create="create.group_id=request.group_id">
-    <show-create></show-create>
-    <request-button @click="do_scan" type="primary" icon="el-icon-refresh">扫描</request-button>
-    <request-select prop="group_id" data="groups"></request-select>
-</request-form>
-<create-form>
-    <create-select prop="group_id" data="groups"></create-select>
-    <create-text prop="item_name"></create-text>
-    <create-text prop="display_order"></create-text>
-    <create-text prop="url"></create-text>
-    <create-text prop="icon"></create-text>
-</create-form>
+<m-navbar @open-create="create.group_id=request.group_id">
+    <mb-create @click="create.group_id=request.group_id"></mb-create>
+    <m-button @click="do_scan" type="primary" icon="el-icon-refresh">扫描</m-button>
+    <m-select prop="group_id" data="groups"></m-select>
+</m-navbar>
+<m-dialog mode="create">
+    <m-select prop="group_id" data="groups"></m-select>
+    <m-text prop="item_name"></m-text>
+    <m-text prop="display_order"></m-text>
+    <m-text prop="url"></m-text>
+    <m-text prop="permission_code"></m-text>
+    <m-text prop="icon"></m-text>
+</m-dialog>
 
-<edit-form>
-    <edit-select prop="group_id" :data="groups"></edit-select>
-    <edit-text prop="item_name"></edit-text>
-    <edit-text prop="display_order"></edit-text>
-    <edit-text prop="url"></edit-text>
-    <edit-text prop="permission_code"></edit-text>
-    <edit-text prop="icon"></edit-text>
-</edit-form>
-<result-table>
-    <result-index></result-index>
-    <result-column prop="item_id" width="50"></result-column>
-    <result-column prop="item_name" width="150"></result-column>
-    <result-column prop="url" show-overflow-tooltip></result-column>
-    <result-column prop="permission_code"></result-column>
-    <result-column prop="display_order" width="50"></result-column>
-    <result-column prop="icon" width="150"></result-column>
-    <result-account prop="updator_name"></result-account>
-    <result-timestamp prop="updated_time"></result-timestamp>
-    <result-op width="125" v-slot="{row}">
-        <show-edit :row="row"></show-edit>
-        <show-delete :row="row"></show-delete>
-    </result-op>
-</result-table>
+<m-dialog mode="edit">
+    <m-select prop="group_id" :data="groups"></m-select>
+    <m-text prop="item_name"></m-text>
+    <m-text prop="display_order"></m-text>
+    <m-text prop="url"></m-text>
+    <m-text prop="permission_code"></m-text>
+    <m-text prop="icon"></m-text>
+</m-dialog>
+<m-table>
+    <m-index></m-index>
+    <m-text prop="item_id" width="50"></m-text>
+    <m-text prop="item_name" width="150"></m-text>
+    <m-text prop="url" show-overflow-tooltip></m-text>
+    <m-text prop="permission_code"></m-text>
+    <m-text prop="display_order" width="50"></m-text>
+    <m-text prop="icon" width="150"></m-text>
+    <m-account prop="updator_name"></m-account>
+    <m-timestamp prop="updated_time"></m-timestamp>
+    <m-ops ops="edit,delete"></m-ops>
+</m-table>
 @section('script')
     <script>
         vm = new App({

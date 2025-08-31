@@ -1,6 +1,6 @@
-<request-form>
-    <show-edit :disabled="editDisabled"></show-edit>
-    <el-select v-model="request.role_id" placeholder="请选择">
+<m-navbar>
+    <mb-edit :disabled="editDisabled"></mb-edit>
+    <el-select v-model="request.role_id" placeholder="请选择" size="mini">
         <el-option
                 v-for="role in roles"
                 :key="role.role_id"
@@ -8,8 +8,8 @@
                 :value="String(role.role_id)">
         </el-option>
     </el-select>
-</request-form>
-<edit-form>
+</m-navbar>
+<m-dialog mode="edit">
     <el-checkbox-group v-model="edit.permission_ids">
         <el-checkbox v-for="permission in permissions" :label="permission.permission_id"
                      :key="permission.permission_id" style="width: 40%; text-align: left"
@@ -17,20 +17,20 @@
             @{{permission.permission_code}}
         </el-checkbox>
     </el-checkbox-group>
-</edit-form>
-<result-table>
-    <result-index></result-index>
-    <result-link prop="permission_id" href="/rbac/permission" width="50"></result-link>
-    <result-column prop="permission_code" width="200"></result-column>
-    <result-column prop="roles" width="300" v-slot="{row}">
+</m-dialog>
+<m-table>
+    <m-index></m-index>
+    <m-link prop="permission_id" href="/rbac/permission" width="50"></m-link>
+    <m-text prop="permission_code" width="200"></m-text>
+    <m-text prop="roles" width="300" v-slot="{row}">
         <el-button size="small" v-for="role in row.roles" :key="role.role_id" type="text"
                    @click.native="request.role_id = role.role_id" :disabled="request.role_id == role.role_id"
                    :title="role.role_name">
             @{{ role.display_name }}
         </el-button>
-    </result-column>
-    <result-column prop="display_name" label="显示名称" show-overflow-tooltip></result-column>
-</result-table>
+    </m-text>
+    <m-text prop="display_name" label="显示名称" show-overflow-tooltip></m-text>
+</m-table>
 
 @section('script')
     <script>
