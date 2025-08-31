@@ -15,7 +15,7 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Viewing\View\Attribute\ViewPostMapping;
 
-#[Authorize]
+#[Authorize(Authorize::GUEST)]
 #[RequestMapping('/admin/account')]
 class AccountController extends Controller
 {
