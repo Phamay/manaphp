@@ -2,17 +2,16 @@
 
 namespace App\Controllers;
 
+use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Ws\Attribute\CloseMapping;
 use ManaPHP\Ws\Attribute\OpenMapping;
+use ManaPHP\Ws\Pushing\ServerInterface;
 use ManaPHP\Ws\Router\Attribute\WebSocketMapping;
 
 #[WebSocketMapping('/push')]
 class PushController extends Controller
 {
-    public function startAction()
-    {
-        $this->wspServer->start();
-    }
+    #[Autowired] protected ServerInterface $wspServer;
 
     #[OpenMapping]
     public function openAction($fd)

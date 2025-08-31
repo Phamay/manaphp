@@ -13,11 +13,6 @@ class ChatController extends Controller
 {
     #[Autowired] protected ServerInterface $chatServer;
 
-    public function startAction()
-    {
-        $this->chatServer->start();
-    }
-
     #[OpenMapping]
     public function openAction($fd)
     {
