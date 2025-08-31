@@ -29,7 +29,7 @@ class AccountController extends Controller
     }
 
     #[ViewPostMapping]
-    public function registerAction(string $code, string $password): void
+    public function registerAction(string $code, string $password): User
     {
         $this->captcha->verify($code);
 
@@ -38,6 +38,6 @@ class AccountController extends Controller
         $user->status = User::STATUS_ACTIVE;
         $user->password = $password;
 
-        $this->userRepository->create($user);
+        return $this->userRepository->create($user);
     }
 }

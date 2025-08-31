@@ -32,8 +32,8 @@ class PasswordController extends Controller
 
     #[Config] protected string $app_name;
 
-    #[PostMapping]
-    public function captchaAction()
+    #[GetMapping]
+    public function captchaAction(): ResponseInterface
     {
         return $this->captcha->generate();
     }
@@ -107,7 +107,7 @@ class PasswordController extends Controller
 
     #[Authorize(Authorize::USER)]
     #[ViewPostMapping]
-    public function changeAction(string $old_password, string $new_password, string $new_password_confirm)
+    public function changeAction(string $old_password, string $new_password, string $new_password_confirm): int|string
     {
         $user = $this->userRepository->get($this->identity->getId());
         if (!$user->verifyPassword($old_password)) {
@@ -121,5 +121,7 @@ class PasswordController extends Controller
 
         $this->userRepository->update($user);
         $this->session->destroy();
+
+        return 0;
     }
 }

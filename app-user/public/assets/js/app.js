@@ -79,7 +79,7 @@ axios.interceptors.response.use(function (res) {
                     window.location.href = '/login';
                     break;
                 default:
-                    alert(error.response.msg || '网络错误，请稍后重试: ' + error.response.status);
+                    alert(error.response.data.msg || '网络错误，请稍后重试: ' + error.response.status);
                     break;
             }
         } else {
@@ -151,7 +151,7 @@ Vue.filter('json', function (value) {
     return JSON.stringify(typeof value === 'string' ? JSON.parse(value) : value, null, 2);
 });
 
-Vue.component('pager', {
+Vue.component('m-pager', {
     template: ` 
  <el-pagination background :current-page="Number($root.response.page)"
        :page-size="Number($root.request.size)"
@@ -184,20 +184,15 @@ Vue.component('pager', {
     }
 });
 
-Vue.component('date-picker', {
+Vue.component('m-date-picker', {
     props: ['value'],
     template: `
 <el-date-picker v-model="time" type="daterange" 
     start-placeholder="开始日期" end-placeholder="结束日期" 
     value-format="yyyy-MM-dd" 
-    size="small"
-    :picker-options="pickerOptions" @change="change">
+    size="mini"
+    :picker-options="pickerOptions" @change="$emit('input', $event)">
 </el-date-picker>`,
-    methods: {
-        change(value) {
-            this.$emit('input', value);
-        }
-    },
     watch: {
         value(val) {
             this.time = val;
@@ -306,7 +301,7 @@ Vue.component('date-picker', {
     }
 });
 
-Vue.component('my-menu', {
+Vue.component('m-menu', {
     template: `
 <el-menu :default-active="active" class="el-menu-vertical-demo" :unique-opened="true">
     <template v-for="group in groups">
@@ -355,51 +350,11 @@ Vue.component('my-menu', {
     }
 });
 
-Vue.component('user-menu', {
-    template: `
-<el-menu :default-active="active" class="el-menu-vertical-demo" :unique-opened="true">
-    <template v-for="group in groups">
-        <el-submenu :index="group.group_name">
-            <template slot="title">
-                <i :class="group.icon"></i>
-                <span>{{group.group_name}}</span>
-            </template>
-            <template v-for="item in group.items ">
-                <el-menu-item :index="baseURL+item.url"><i :class="item.icon" ></i>
-                    <el-link :href="baseURL+item.url">{{item.item_name}}</el-link>
-                </el-menu-item>
-            </template>
-        </el-submenu>
-     </template>
-</el-menu>`,
-    created() {
-        this.ajaxGet('/user/menu?cache=2', (res) => {
-            this.groups = res;
-
-            for (let group of res) {
-                for (let item of group.items) {
-                    if (item.url === this.active) {
-                        document.title = ' ' + group.group_name + ' - ' + item.item_name;
-                        break;
-                    }
-                }
-            }
-        })
-    },
-    data() {
-        return {
-            baseURL: window.BASE_URL,
-            active: location.pathname,
-            groups: []
-        }
-    },
-});
-
 Vue.component('my-menu-tabs', {
     template: `
 <el-tabs  @tab-remove="remove" @tab-click="click" class="my-menu-tabs" v-model="tab">
     <el-tab-pane label="首页" name="/"></el-tab-pane>
-    <el-tab-pane v-for="tab in tabs" :label="tab.name" closable :name="tab.url"></el-tab-pane>     
+    <el-tab-pane v-for="tab in tabs" :label="tab.name" closable :name="tab.url" :key="tab.url"></el-tab-pane>     
 </el-tabs>`,
     data() {
         let tabs = sessionStorage.getItem('.my-menu-tabs');
@@ -430,7 +385,7 @@ Vue.component('my-menu-tabs', {
     }
 });
 
-Vue.component('axios-cache-switcher', {
+Vue.component('m-axios-cache-switcher', {
     template: `
 <div>
     <div v-if="enabled" @click="localStorage.setItem('axios.cache.enabled','0');enabled=false">缓存 (√)</div>
@@ -443,8 +398,8 @@ Vue.component('axios-cache-switcher', {
     }
 });
 
-Vue.component('system-time', {
-    template: '<span class="left" :title="diff.toFixed(3)" :style="{backgroundColor: bgColor}" style="cursor:pointer"" v-show="diff!==null&&time!==null" @click="update">{{time}}</span>',
+Vue.component('m-system-time', {
+    template: '<span class="left" :title="diff" :style="{backgroundColor: bgColor}" style="cursor:pointer"" v-show="diff!==null&&time!==null" @click="update">{{time}}</span>',
     data() {
         return {
             diff: null,
@@ -454,45 +409,38 @@ Vue.component('system-time', {
     },
     computed: {
         bgColor() {
-            return Math.abs(this.diff) >= 2 ? 'red' : 'parent';
+            return Math.abs(this.diff) >= 1 ? 'red' : 'parent';
         }
     },
     created() {
+        this.update();
         setInterval(() => {
             if (this.diff !== null) {
                 this.time = (moment().subtract(this.diff, 'seconds').format('YYYY-MM-DD hh:mm:ss'))
             }
         }, 1000);
-
-        let diff = window.sessionStorage.getItem(this.key);
-        if (diff === null) {
-            this.update();
-        } else {
-            this.diff = parseFloat(diff);
-        }
     },
     methods: {
         update() {
             axios.get('/time/current?t=' + Date.now()).then((res) => {
                 if (res.data.code === 0) {
                     this.diff = Math.round(Date.now() - res.data.data.timestamp * 1000) / 1000;
-                    window.sessionStorage.setItem(this.key, this.diff);
                 }
             });
         }
     }
 });
 
-Vue.component('show-create', {
-    template: `<el-button @click="$root.createVisible=true;$emit('click');" type="primary" icon="el-icon-plus" size="small">新增{{$root.topic}}</el-button>`
+Vue.component('mb-create', {
+    template: `<el-button @click="$root.createVisible=true;$emit('click');" type="primary" icon="el-icon-plus" size="mini">{{$root.topic}}</el-button>`
 });
 
-Vue.component('show-edit', {
+Vue.component('mb-edit', {
     props: ['row', 'disabled'],
     template: `<el-button @click="$root.show_edit(row);$emit('click')" size="mini" type="primary" icon="el-icon-edit" title="编辑" :disabled="disabled"></el-button>`
 });
 
-Vue.component('show-delete', {
+Vue.component('mb-delete', {
     props: ['row'],
     template: '<el-button @click="do_delete(row)" size="mini" type="danger" icon="el-icon-delete" title="删除"></el-button>',
     methods: {
@@ -515,7 +463,7 @@ Vue.component('show-delete', {
     }
 });
 
-Vue.component('show-detail', {
+Vue.component('mb-detail', {
     props: ['row', 'link'],
     template: '<el-button @click="show_detail(row,link)" size="mini" type="info" icon="el-icon-more" title="详情"></el-button>',
     methods: {
@@ -530,7 +478,7 @@ Vue.component('show-detail', {
     }
 });
 
-Vue.component('show-enable', {
+Vue.component('mb-enable', {
     props: ['row'],
     template: `
 <el-button v-if="row.enabled" @click.native.prevent="do_disable(row)" size="mini" type="danger" icon="el-icon-lock" title="禁用"></el-button>
@@ -547,57 +495,60 @@ Vue.component('show-enable', {
     }
 });
 
-Vue.component('result-table', {
+Vue.component('m-table', {
+    provide() {
+        return {
+            parentTag: 'm-table',
+            mode: '',
+        }
+    },
     props: ['data'],
     template: `
-<div class="result-table">
-    <el-table v-if="data" :data="data" border size="small">
+<div class="m-table">
+    <el-table v-if="data" :data="data" border size="mini">
         <slot></slot>
     </el-table>
     <template v-else-if="$root.request.page">
-        <pager></pager>
-        <el-table :data="$root.response.items" border size="small">
+        <m-pager></m-pager>
+        <el-table :data="$root.response.items" border size="mini">
             <slot></slot>
         </el-table>
-        <pager></pager>
+        <m-pager></m-pager>
     </template>
-    <el-table v-else :data="$root.response" border size="small">
+    <el-table v-else :data="$root.response" border size="mini">
         <slot></slot>
     </el-table>
 </div>`,
 });
 
-Vue.component('selector', {
+Vue.component('m-selector', {
     props: ['value', 'data', 'disabled'],
     template: `
 <span>
-    <el-select v-model="val" size="small" clearable style="width: 150px" @change="$emit('input', $event)" :disabled="disabled" v-bind="$attrs">
-        <el-option v-for="item in extractItems(data)" :key="item.value" :label="item.label" :value="String(item.value)"></el-option>
+    <el-select :value="value2" size="mini" clearable style="width: 150px" @change="$emit('input', $event)" :disabled="disabled" v-bind="$attrs">
+        <el-option v-for="item in items" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
 </span>`,
-    data() {
-        return {val: String(this.value)};
-    },
-    watch: {
-        value(val) {
-            this.val = String(val);
-        }
-    },
-    methods: {
-        extractItems: function (data) {
-            if (Array.isArray(data)) {
-                if (typeof data[0] === 'object') {
-                    return data.map(v => {
+    computed: {
+        value2() {
+            // noinspection EqualityComparisonWithCoercionJS
+            let item = this.items.find(option => option.value == this.value);
+            return item ? item.value : null;
+        },
+        items() {
+            if (Array.isArray(this.data)) {
+                if (typeof this.data[0] === 'object') {
+                    return this.data.map(v => {
                         let [value, label] = Object.values(v);
                         return {value, label};
                     });
                 } else {
-                    return data.map(v => ({value: v, label: v}));
+                    return this.data.map(v => ({value: v, label: v}));
                 }
-            } else if (typeof data === 'object') {
+            } else if (typeof this.data === 'object') {
                 let items = [];
-                for (let key in data) {
-                    items.push({value: key, label: data[key]});
+                for (let key in this.data) {
+                    items.push({value: key, label: this.data[key]});
                 }
                 return items;
             }
@@ -605,39 +556,34 @@ Vue.component('selector', {
     }
 });
 
-Vue.component('request-form', {
+Vue.component('m-navbar', {
+    provide() {
+        return {
+            parentTag: 'm-navbar',
+            mode: this.mode,
+        }
+    },
+    props: ['mode'],
     template: `
-<div class="request-form"><slot></slot></div>`,
+<div class="m-navbar" mode=""><slot></slot></div>`,
 });
 
-Vue.component('request-text', {
-    props: ['prop', 'width', 'placeholder'],
-    template: `
-<el-input v-model.trim="$root.request[prop]"
-    size="small" clearable 
-    :style="{width: (width||150)+'px'}"
-    :placeholder="placeholder||$root.label[prop]||prop"
-    v-bind="$attrs">
-</el-input>`
-});
-
-Vue.component('request-date', {
+Vue.component('m-date', {
     props: ['prop'],
-    template: `<date-picker v-model.trim="$root.request[prop]"></date-picker>`
+    template: `<span><slot></slot><m-date-picker v-model.trim="$root.request[prop]"></m-date-picker></span>`
 });
 
-Vue.component('request-select', {
-    props: ['prop', 'data'],
-    template: `<selector v-model.trim="$root.request[prop]" :data="isString(data)?$root[data]:data"></selector>`
-});
-
-Vue.component('request-button', {
-    template: `<el-button size="small" @click="$emit('click')" v-bind="$attrs""><slot></slot></el-button>`
-});
-
-Vue.component('create-form', {
+Vue.component('m-dialog', {
+    provide() {
+        return {
+            parentTag: 'm-dialog',
+            mode: this.mode,
+        }
+    },
+    props: ['mode'],
     template: `
-<el-dialog :title="'新增-'+$root.topic" :visible.sync="$root.createVisible" class="create-dialog" @opened="$root.$refs.create=$refs.create">
+<div>
+<el-dialog v-if="mode==='create'" :title="'新增-'+$root.topic" :visible.sync="$root.createVisible" class="create-dialog" @open="focusFirstInput" @opened="$root.$refs.create=$refs.create">
     <el-form :model="$root.create" ref="create" size="small">
         <slot></slot>
     </el-form>
@@ -645,7 +591,22 @@ Vue.component('create-form', {
          <el-button type="primary" @click="do_create" size="small">创建</el-button>
         <el-button @click="$root.createVisible = false; $root.$refs.create.resetFields()" size="small">取消</el-button>
     </span>
-</el-dialog>`,
+</el-dialog>
+<el-dialog v-if="mode==='edit'" :title="'编辑-'+$root.topic" :visible.sync="$root.editVisible" class="edit-dialog" @open="focusFirstInput" @opened="$root.$refs.edit=$refs.edit">
+     <el-form :model="$root.edit" ref="edit" size="small">
+        <slot></slot>
+    </el-form>
+    <span slot="footer">
+        <el-button type="primary" @click="do_edit" size="small">保存</el-button>
+        <el-button @click="$root.editVisible=false" size="small">取消</el-button>
+    </span>
+</el-dialog>
+<el-dialog v-if="mode==='detail'" title="详情" :visible.sync="$root.detailVisible" class="detail-dialog" @open="focusFirstInput" @opened="$root.$refs.detail=$refs.detail">
+    <el-form :model="$root.detail" ref="detail" label-width="150px" size="mini">
+        <slot></slot>
+    </el-form>
+</el-dialog>
+</div>`,
     methods: {
         do_create(create) {
             let success = true;
@@ -658,35 +619,66 @@ Vue.component('create-form', {
                 this.$root.$refs.create.resetFields();
                 this.$root.reload();
             });
+        },
+        do_edit() {
+            this.ajaxPost("edit", this.$root.edit, () => {
+                this.$root.editVisible = false;
+                this.$root.reload();
+            });
+        },
+        beforeCreate() {
+            this.$root.hasDetail = true;
+        },
+        focusFirstInput() {
+            this.$nextTick(() => {
+                const firstInput = this.$el.querySelector('input, textarea, [contenteditable]');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            });
         }
     }
 });
 
-Vue.component('create-text', {
-    props: ['label', 'prop', 'disabled'],
+Vue.component('m-text', {
+    inject: ['parentTag', 'mode'],
+    props: ['label', 'prop', 'disabled', 'width', 'placeholder', 'title', 'prefix', 'suffix'],
     template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-input v-model="$root.create[prop]" auto-complete="off" :disabled="disabled" @change="$emit('input', $event)"></el-input>
-</el-form-item>`
+<el-input v-if="parentTag==='m-navbar'" v-model.trim="$root.request[prop]"
+    size="mini" clearable 
+    :style="{width: (width||150)+'px'}"
+    :placeholder="placeholder||$root.label[prop]||prop"
+    v-bind="$attrs">
+</el-input>
+<el-table-column v-else-if="parentTag==='m-table'" :prop="prop" :label="label||$root.label[prop]||prop" v-bind="$attrs" :width="width" v-slot="{row}">
+    <slot :row="row"><span :title="title?row[title]:''">{{prefix}}{{$attrs['formatter']?$attrs['formatter'](row, prop, getProp(row,prop)):getProp(row,prop)}}{{suffix}}</span></slot>
+</el-table-column>
+<el-form-item v-else-if="mode==='detail'" :label="(label||$root.label[prop]||prop)+':'">{{ $root.detail[prop]}}</el-form-item>
+ <el-form-item v-else :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
+     <el-input v-model="$root[mode][prop]" auto-complete="off" :disabled="disabled" @change="$emit('input', $event)"></el-input>
+ </el-form-item>`
 });
 
-Vue.component('create-textarea', {
+Vue.component('m-textarea', {
+    inject: ['parentTag', 'mode'],
     props: ['label', 'prop', 'rows', 'disabled'],
     template: `
 <el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-input v-model="$root.create[prop]" auto-complete="off" type="textarea" :rows="rows" :disabled="disabled" @change="$emit('input', $event)"></el-input>
+    <el-input v-model="$root[mode][prop]" auto-complete="off" type="textarea" :rows="rows" :disabled="disabled" @change="$emit('input', $event)"></el-input>
 </el-form-item>`
 });
 
-Vue.component('create-checkbox', {
+Vue.component('m-checkbox', {
+    inject: ['parentTag', 'mode'],
     props: ['label', 'prop', 'disabled'],
     template: `
 <el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-checkbox v-model="$root.create[prop]" :disabled="disabled"><slot></slot></el-checkbox>
+    <el-checkbox v-model="$root[mode][prop]" :disabled="disabled"><slot></slot></el-checkbox>
 </el-form-item>`
 });
 
-Vue.component('create-radio', {
+Vue.component('m-radio', {
+    inject: ['parentTag', 'mode'],
     props: ['label', 'prop', 'data', 'disabled'],
     computed: {
         radios() {
@@ -695,128 +687,81 @@ Vue.component('create-radio', {
     },
     template: `
 <el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-radio-group v-model="$root.create[prop]" :disabled="disabled">
+    <el-radio-group v-model="$root[mode][prop]" :disabled="disabled">
         <el-radio v-for="(status, id) in radios" :label="id" :key="id">{{status}}</el-radio>
     </el-radio-group>
 </el-form-item>`
 });
 
-Vue.component('create-select', {
+Vue.component('m-select', {
+    inject: ['parentTag', 'mode'],
     props: ['label', 'prop', 'data', 'disabled'],
     template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'">
-    <selector v-model="$root.create[prop]" :data="isString(data)?$root[data]:data" :disabled="disabled" v-bind="$attrs"></selector>
+<m-selector v-if="parentTag==='m-navbar'" v-model.trim="$root.request[prop]" :data="isString(data)?$root[data]:data"></m-selector>
+<el-form-item v-else :label="(label||$root.label[prop]||prop)+':'">
+    <m-selector v-model="$root[mode][prop]" :data="isString(data)?$root[data]:data" :disabled="disabled" v-bind="$attrs"></m-selector>
 </el-form-item>`
 });
 
-Vue.component('create-switch', {
+Vue.component('m-switch', {
+    inject: ['parentTag', 'mode'],
     props: ['label', 'prop', 'disabled'],
     template: `
 <el-form-item :label="(label||$root.label[prop]||prop)+':'">
-    <el-switch v-model="$root.create[prop]" :disabled="disabled"></el-switch>
+    <el-switch v-model="$root[mode][prop]" :disabled="disabled"></el-switch>
 </el-form-item>`
 });
 
-Vue.component('edit-form', {
+Vue.component('m-timestamp', {
+    inject: ['parentTag'],
+    props: ['label', 'prop', 'disabled'],
     template: `
-<el-dialog :title="'编辑-'+$root.topic" :visible.sync="$root.editVisible" class="edit-dialog" @opened="$root.$refs.edit=$refs.edit">
-     <el-form :model="$root.edit" ref="edit" size="small">
-        <slot></slot>
-    </el-form>
-    <span slot="footer">
-        <el-button type="primary" @click="do_edit" size="small">保存</el-button>
-        <el-button @click="$root.editVisible=false" size="small">取消</el-button>
-    </span>
-</el-dialog>`,
+<el-table-column v-if="parentTag==='m-table'" :prop="prop" :label="label||$root.label[prop]||prop" :formatter="formatDate" width="123"></el-table-column>
+<el-form-item v-else :label="(label||$root.label[prop]||prop)+':'">{{ $root.detail[prop]|date}}</el-form-item>`,
     methods: {
-        do_edit() {
-            this.ajaxPost("edit", this.$root.edit, () => {
-                this.$root.editVisible = false;
-                this.$root.reload();
-            });
-        },
-    }
-});
-Vue.component('edit-text', {
-    props: ['label', 'prop', 'disabled'],
-    template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-input v-model="$root.edit[prop]" auto-complete="off" :disabled="disabled" @change="$emit('input', $event)"></el-input>
-</el-form-item>`
-});
-
-Vue.component('edit-textarea', {
-    props: ['label', 'prop', 'disabled', 'rows'],
-    template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-input v-model="$root.edit[prop]" auto-complete="off" type="textarea" :disabled="disabled" @change="$emit('input', $event)" :rows="rows"></el-input>
-</el-form-item>`
-});
-
-Vue.component('edit-select', {
-    props: ['label', 'prop', 'data', 'disabled'],
-    template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'">
-    <selector v-model="$root.edit[prop]" :disabled="disabled" :data="data"></selector>
-</el-form-item>`
-});
-
-Vue.component('edit-radio', {
-    props: ['label', 'prop', 'data', 'disabled'],
-    template: `
-<el-form-item :label="(label||$root.label[prop]||prop)+':'" :prop="prop">
-    <el-radio-group v-model="$root.edit[prop]" :disabled="disabled">
-        <el-radio v-for="(status, id) in data" :label="id" :key="id">{{status}}</el-radio>
-    </el-radio-group>
-</el-form-item>`
-});
-
-Vue.component('detail-form', {
-    template: `
-<el-dialog title="详情" :visible.sync="$root.detailVisible" class="detail-dialog" @opened="$root.$refs.detail=$refs.detail">
-    <el-form :model="$root.detail" ref="detail" label-width="150px" size="mini">
-        <slot></slot>
-    </el-form>
-</el-dialog>`,
-    beforeCreate() {
-        this.$root.hasDetail = true;
+        formatDate(row, column, value) {
+            return value ? this.$moment(value * 1000).format('YYYY-MM-DD HH:mm:ss') : '';
+        }
     }
 });
 
-Vue.component('detail-text', {
+Vue.component('m-time', {
+    inject: ['parentTag'],
     props: ['label', 'prop', 'disabled'],
-    template: `<el-form-item :label="(label||$root.label[prop]||prop)+':'">{{ $root.detail[prop]}}</el-form-item>`
+    template: `
+<el-table-column v-if="parentTag==='m-table'" :prop="prop" :label="label||$root.label[prop]||prop" :formatter="formatDate" width="80"></el-table-column>
+<el-form-item v-else :label="(label||$root.label[prop]||prop)+':'">{{ $root.detail[prop]|date}}</el-form-item>`,
+    methods: {
+        formatDate(row, column, value) {
+            return value ? this.$moment(value * 1000).format('MM-DD HH:mm') : '';
+        }
+    }
 });
 
-Vue.component('detail-timestamp', {
-    props: ['label', 'prop', 'disabled'],
-    template: `<el-form-item :label="(label||$root.label[prop]||prop)+':'">{{ $root.detail[prop]|date}}</el-form-item>`
-});
-
-Vue.component('detail-json', {
+Vue.component('m-json', {
     props: ['label', 'prop', 'disabled'],
     template: `<el-form-item :label="(label||$root.label[prop]||prop)+':'"><pre>{{ $root.detail[prop]|json}}</pre></el-form-item>`
 });
 
-Vue.component('result-index', {
+Vue.component('m-index', {
     template: `<el-table-column type="index" label="#" width="50"></el-table-column>`
 });
 
-Vue.component('result-id', {
+Vue.component('m-id', {
     props: ['label', 'prop'],
     template: `<el-table-column :prop="prop" :label="label||$root.label[prop]||prop" width="100"></el-table-column>`
 });
 
-Vue.component('result-account', {
+Vue.component('m-account', {
     props: ['label', 'prop'],
     template: `<el-table-column :prop="prop" :label="label||$root.label[prop]||prop" width="100"></el-table-column>`
 });
 
-Vue.component('result-email', {
+Vue.component('m-email', {
     template: `<el-table-column prop="email" label="邮箱" with="250" show-overflow-tooltip></el-table-column>`
 });
 
-Vue.component('result-ip', {
+Vue.component('m-ip', {
     props: ['label', 'prop'],
     template: `
 <el-table-column :prop="prop" :label="label||$root.label[prop]||prop" width="120" v-slot="{row}">
@@ -825,7 +770,7 @@ Vue.component('result-ip', {
 </el-table-column>`
 });
 
-Vue.component('result-enabled', {
+Vue.component('m-enabled', {
     template: `<el-table-column prop="enabled" :formatter="formatEnabled" label="状态" width="100"></el-table-column>`,
     methods: {
         formatEnabled(row, column, value) {
@@ -834,45 +779,18 @@ Vue.component('result-enabled', {
     }
 });
 
-Vue.component('result-timestamp', {
-    props: ['label', 'prop'],
-    template: `<el-table-column :prop="prop" :label="label||$root.label[prop]||prop" :formatter="formatDate" width="123"></el-table-column>`,
-    methods: {
-        formatDate(row, column, value) {
-            return value ? this.$moment(value * 1000).format('YYYY-MM-DD HH:mm:ss') : '';
-        }
-    }
+Vue.component('m-pct100', {
+    props: ['label', 'prop', 'title'], template: `
+<el-table-column :prop="prop" :label="label||$root.label[prop]||prop" v-bind="$attrs" v-slot="{row}" width="60">
+    <slot :row="row"><span :title="title?row[title]:''" :style="{color:getProp(row,prop)>0?'red':'green'}">{{$attrs['formatter']?$attrs['formatter'](row, prop, getProp(row,prop)):getProp(row,prop)}}%</span></slot>
+</el-table-column>`
 });
 
-Vue.component('result-column', {
-    props: ['label', 'prop', 'title'],
-    template: `
-<el-table-column :prop="prop" :label="label||$root.label[prop]||prop" v-bind="$attrs" v-slot="{row}">
-    <slot :row="row"><span :title="title?row[title]:''">{{$attrs['formatter']?$attrs['formatter'](row, prop, getProp(row,prop)):getProp(row,prop)}}</span></slot>
-</el-table-column>`,
-    methods: {
-        getProp(row, prop) {
-            if (prop === undefined) {
-                return '';
-            }
-            let v = row;
-            for (let part of prop.split('.')) {
-                if (!v.hasOwnProperty(part)) {
-                    return '';
-                }
-                v = v[part];
-            }
-
-            return v;
-        }
-    }
-});
-
-Vue.component('result-tag', {
+Vue.component('m-tag', {
     props: ['label', 'prop'],
     template: `
 <el-table-column :label="label||$root.label[prop]||prop" v-bind="$attrs" v-slot="{row}">
-    <el-tag size="small" v-for="item in extractItems(row[prop])" :key="item.id">{{item.label}}</el-tag>
+    <el-tag size="mini" v-for="item in extractItems(row[prop])" :key="item.id">{{item.label}}</el-tag>
 </el-table-column>`,
     methods: {
         extractItems(data) {
@@ -892,7 +810,7 @@ Vue.component('result-tag', {
     }
 });
 
-Vue.component('result-link', {
+Vue.component('m-link', {
     props: ['label', 'prop', 'href'],
     template: `
 <el-table-column :label="label||$root.label[prop]||prop" width="100" v-slot="{row}">
@@ -900,15 +818,50 @@ Vue.component('result-link', {
 </el-table-column>`
 });
 
-Vue.component('result-op', {
+Vue.component('m-ops', {
+    props: ['ops'],
+    computed: {
+        items() {
+            return this.ops.split(',').map(op => op.trim())
+        },
+    }
+    ,
     template: `
-<el-table-column fixed="right" label="操作" v-bind="$attrs" v-slot="{row}">
-    <slot :row="row"></slot>
+<el-table-column fixed="right" label="操作" v-bind="$attrs" v-slot="{row}" :width="(items.length*60)+'px'">
+    <span style="display: inline-block; text-align: center; width: 100%;">
+    <template v-if="ops" v-for="op in items">
+        <component :is="'mb-'+op" :row="row"></component>
+    </template>
+     <slot :row="row"></slot>
+     </span>
 </el-table-column>`
+})
+;
+
+Vue.component('m-button', {
+    template: `<el-button size="mini" v-bind="$attrs" @click="$emit('click')"><slot></slot></el-button>`
 });
 
-Vue.component('result-button', {
-    template: `<el-button size="mini" v-bind="$attrs" @click="$emit('click')"><slot></slot></el-button>`
+Vue.component('m-my-menu', {
+    template: `
+     <el-dropdown-menu slot="dropdown" trigger="click">
+                        <el-dropdown-item>
+                            <m-axios-cache-switcher></m-axios-cache-switcher>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-link :href="BASE_URL+'/admin/login-log/latest'" target="_self">最近登录</el-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-link :href="BASE_URL+'/admin/action-log/latest'" target="_self">最近操作</el-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-link :href="BASE_URL+'/admin/password/change'" target="_self">修改密码</el-link>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-link :href="BASE_URL+'/admin/session/logout'" target="_self">退出</el-link>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>`
 });
 
 Vue.prototype.auto_reload = function () {
@@ -924,6 +877,24 @@ Vue.prototype.auto_reload = function () {
 
 Vue.prototype.isString = function (v) {
     return typeof v === 'string';
+}
+
+Vue.prototype.getProp = function (row, prop) {
+    if (prop === undefined) {
+        return '';
+    }
+    let v = row;
+    for (let part of prop.split('.')) {
+        if (v === null) {
+            return ''
+        }
+        if (!v.hasOwnProperty(part)) {
+            return '';
+        }
+        v = v[part];
+    }
+
+    return v;
 }
 
 App = Vue.extend({
@@ -951,6 +922,7 @@ App = Vue.extend({
                 path: '路径',
                 builtin: '内置',
                 enabled: "启用",
+                type: '类别',
             },
             createVisible: false,
             editVisible: false,
