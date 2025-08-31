@@ -31,8 +31,8 @@
 <div class="mana_container">
     @if(config_get('manaphp_brand_show', true))
         <h1>ManaPHP <sub>v{{ $version }}</sub></h1>
-        {{ $current_time }}
-        {{ container("ManaPHP\\Http\\DispatcherInterface")->getHandler()}}
+        <div>{{ $current_time }}</div>
+        <div>{{ container("ManaPHP\\Http\\RequestInterface")->handler()}}</div>
         @block('profiler')
     @endif
 </div>
