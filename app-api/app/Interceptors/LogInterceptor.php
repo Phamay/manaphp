@@ -6,12 +6,12 @@ namespace App\Interceptors;
 
 use Attribute;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Http\Interceptor;
+use ManaPHP\Di\Attribute\InterceptorInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-class LogInterceptor extends Interceptor
+class LogInterceptor implements InterceptorInterface
 {
     #[Autowired] protected LoggerInterface $logger;
 
