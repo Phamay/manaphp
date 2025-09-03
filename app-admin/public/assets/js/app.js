@@ -76,7 +76,7 @@ axios.interceptors.response.use(function (res) {
                     alert(error.response.data.msg);
                     break;
                 case 401:
-                    window.location.href = window.BASE_URL + '/login';
+                    window.location.href = window.BASE_URL + '/login?redirect=' + window.location.href;
                     break;
                 default:
                     alert(error.response.data.msg || '网络错误，请稍后重试: ' + error.response.status);
@@ -155,7 +155,7 @@ Vue.component('m-pager', {
     template: ` 
  <el-pagination background :current-page="Number($root.response.page)"
        :page-size="Number($root.request.size)"
-       :page-sizes="[10,20,25,50,100,500,1000]"
+       :page-sizes="[10,15,20,25,50,100,500,1000]"
        @current-change="$root.request.page=$event"
        @size-change="$root.request.size=$event; $root.request.page=1"
        :total="$root.response.count" layout="sizes,total, prev, pager, next, jumper">
