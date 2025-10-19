@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use ManaPHP\Di\Pool;
+use ManaPHP\Di\Factory;
 
 return [
-    'ManaPHP\Http\ServerInterface' => new Pool([
+    'ManaPHP\Http\ServerInterface' => new Factory([
         'default' => '#auto',
         'auto'    => \ManaPHP\Http\Server\Detector::detect(),
         'swoole'  => [
