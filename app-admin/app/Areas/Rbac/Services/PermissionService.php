@@ -34,7 +34,7 @@ class PermissionService
         foreach ($this->controllers->getControllers() as $controller) {
             $rClass = new ReflectionClass($controller);
 
-            if (($attribute = $rClass->getAttributes(Authorize::class)[0] ?? null) !== null) {
+            if (($attribute = $rClass->getAttributes(Authorize::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) !== null) {
                 /** @var Authorize $controllerAuthorize */
                 $controllerAuthorize = $attribute->newInstance();
 
@@ -60,7 +60,7 @@ class PermissionService
                 $permission->permission_code = $this->authorization->getPermission($controller, $action);
                 $permission->display_name = $controller . '::' . $action;
 
-                if (($attribute = $rMethod->getAttributes(Authorize::class)[0] ?? null) !== null) {
+                if (($attribute = $rMethod->getAttributes(Authorize::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) !== null) {
                     /** @var Authorize $actionAuthorize */
                     $actionAuthorize = $attribute->newInstance();
 
